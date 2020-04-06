@@ -1,4 +1,6 @@
 /**
+ * @author Minha Gwon
+ * @date 2020. 4. 7.
  * 단어뒤집기 
  * https://www.acmicpc.net/problem/9093 
  */
