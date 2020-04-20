@@ -4,6 +4,7 @@
  * 스택 수열 
  * https://www.acmicpc.net/problem/1874
  */
+
 import java.util.*;
 
 public class Main {
