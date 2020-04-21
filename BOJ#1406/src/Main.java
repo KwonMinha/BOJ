@@ -16,7 +16,8 @@
    셋째 줄부터 M개의 줄에 걸쳐 입력할 명령어가 순서대로 주어진다.
    
  * 문제 과정 정리 https://minhamina.tistory.com/17
- * LinkedList와 ListIterator를 사용해 구현 
+ * Main.java : LinkedList와 ListIterator를 사용해 구현
+ * Main2.java : Stack을 사용해 구현 
  */
 
 import java.io.BufferedReader;
@@ -43,7 +44,7 @@ public class Main {
 
 		//iterator 메소드 호출 
 		ListIterator<Character> iter = list.listIterator();
-		//처음 커서는 문장의 맨 뒤에 있어야하기 때문에 커서를 맨뒤로 이동시켜줌 
+		//처음 커서는 문장의 맨 뒤에 있어야하기 때문에 커서를 맨뒤로 이동시켜줌 (ex. abc|)
 		while(iter.hasNext()) {
 			iter.next();
 		}
@@ -51,6 +52,7 @@ public class Main {
 		for(int i = 0; i < M; i++) {
 			String command = br.readLine();
 			char c = command.charAt(0);
+			
 			switch(c) {
 			case 'L':
 				if(iter.hasPrevious())
