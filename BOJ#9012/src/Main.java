@@ -1,12 +1,13 @@
-import java.util.Scanner;
-import java.util.Stack;
-
 /** 
- * @author gwonminha
+ * @author Minha Gwon
  * @date 2020. 4. 7.
  * 괄호
  * https://www.acmicpc.net/problem/9012
  */
+
+import java.util.Scanner;
+import java.util.Stack;
+
 
 public class Main {
 
