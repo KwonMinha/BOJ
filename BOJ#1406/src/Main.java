@@ -14,6 +14,9 @@
    이 문자열은 길이가 N이고, 영어 소문자로만 이루어져 있으며, 길이는 100,000을 넘지 않는다.
    둘째 줄에는 입력할 명령어의 개수를 나타내는 정수 M(1 ≤ M ≤ 500,000)이 주어진다.
    셋째 줄부터 M개의 줄에 걸쳐 입력할 명령어가 순서대로 주어진다.
+   
+ * 문제 과정 정리 https://minhamina.tistory.com/17
+ * LinkedList와 ListIterator를 사용해 구현 
  */
 
 import java.io.BufferedReader;
