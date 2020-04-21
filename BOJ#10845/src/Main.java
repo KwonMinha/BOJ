@@ -1,10 +1,3 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.*;
-
 /**
  * @author gwonminha
  * @date 2020. 4. 21.
@@ -23,6 +16,14 @@ import java.util.*;
 	front: 큐의 가장 앞에 있는 정수를 출력한다. 만약 큐에 들어있는 정수가 없는 경우에는 -1을 출력한다.
 	back: 큐의 가장 뒤에 있는 정수를 출력한다. 만약 큐에 들어있는 정수가 없는 경우에는 -1을 출력한다.
  */
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.*;
+
 public class Main {
 
 	public static void main(String[] args) {
@@ -48,19 +49,24 @@ public class Main {
 					rear = num;
 					break;
 				case "pop":
-					sb.append(qu.isEmpty()? -1 : qu.poll() + "\n");
+					sb.append(qu.isEmpty()? -1 : qu.poll());
+					sb.append("\n");
 					break;
 				case "size":
-					sb.append(qu.size() + "\n");
+					sb.append(qu.size());
+					sb.append("\n");
 					break;
 				case "empty":
-					sb.append(qu.isEmpty()? 1 : 0 + "\n");
+					sb.append(qu.isEmpty()? 1 : 0);
+					sb.append("\n");
 					break;
 				case "front":
-					sb.append(qu.isEmpty()? -1 : qu.peek() + "\n");
+					sb.append(qu.isEmpty()? -1 : qu.peek());
+					sb.append("\n");
 					break;
 				case "back":
-					sb.append(qu.isEmpty()? -1 : rear + "\n");
+					sb.append(qu.isEmpty()? -1 : rear);
+					sb.append("\n");
 					break;
 				default:
 					break;
