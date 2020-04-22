@@ -1,3 +1,11 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.LinkedList;
+import java.util.StringTokenizer;
+
 /**
  * @author Minha Gwon
  * @date 2020. 4. 21.
@@ -19,15 +27,44 @@
     1  2  4 '5' 6  7 
     1  2  4  5 '6' 7
     1  2  4  5 '7'
+    1  2  4 '5'
+   '1' 2  4  5
+    1 '2' 4  5
+    
     ...
    output : <3, 6, 2, 7, 5, 1, 4>
  */
 
 public class Main {
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+		StringBuilder sb = new StringBuilder();
+		sb.append("<");
+		
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		int N = Integer.parseInt(st.nextToken());
+		int K = Integer.parseInt(st.nextToken());
+		
+		LinkedList<Integer> list = new LinkedList<Integer>();
+		for(int i = 0; i < N; i++) {
+			list.add(i+1);
+		}
+		
+		int cnt = 0;
+		int index = 0;
+		
+		while(!list.isEmpty()) {
+			for(int j = 0; j < K; j++) {
+				if(j == K) {
+					//
+				}
+			}
+		}
+		
+		bw.write((sb.substring(0, sb.length()-2) + ">").toString());
+		bw.flush();
+		bw.close();
 	}
-
 }
