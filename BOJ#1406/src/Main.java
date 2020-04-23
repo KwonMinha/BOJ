@@ -15,7 +15,7 @@
    둘째 줄에는 입력할 명령어의 개수를 나타내는 정수 M(1 ≤ M ≤ 500,000)이 주어진다.
    셋째 줄부터 M개의 줄에 걸쳐 입력할 명령어가 순서대로 주어진다.
    
- * 문제 과정 정리 https://minhamina.tistory.com/17
+ * 블로그 https://minhamina.tistory.com/17
  * Main.java : LinkedList와 ListIterator를 사용해 구현
  * Main2.java : Stack을 사용해 구현 
  */
