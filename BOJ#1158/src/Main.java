@@ -13,6 +13,8 @@
   
    ex) input : 7 3
        output : <3, 6, 2, 7, 5, 1, 4>
+       
+ * 블로그 https://minhamina.tistory.com/20
  */
 
 import java.io.BufferedReader;
@@ -37,19 +39,30 @@ public class Main {
 		int K = Integer.parseInt(st.nextToken());
 		
 		Queue<Integer> qu = new LinkedList<Integer>();
-		for(int i = 0; i < N; i++) {
+		for(int i = 0; i < N; i++) { //큐에 N까지의 수 차례로 넣어주기
 			qu.add(i+1);
 		}
 
-		while(!qu.isEmpty()) {
-			for(int j = 0; j < K; j++) {
+		while(!qu.isEmpty()) { //N명의 사람이 모두 제거될 때까지, 즉 큐가 빌 때까지 반복 
+			for(int j = 0; j < K; j++) { //K번째를 제거하기 위한 루프
 				if(j == K-1) {
-					sb.append(qu.poll() + ", ");
+					sb.append(qu.poll() + ", "); //K번을 제거
 				} else {
-					qu.add(qu.poll());
+					qu.add(qu.poll()); //K번이 아닐 때에는 맨 뒤로 이동
 				}				
 			}
 		}
+		
+//		for(int i=0;i<m-1;i++) 
+//		{ deque.addLast(deque.removeFirst()); } 
+//		sb.append(deque.removeFirst() + ", "); }
+//
+		
+		
+//		int index = 0; while(!list.isEmpty()) 
+//		{ index += m; if (index >= list.size()) { index %= list.size(); } 
+//		sb.append(list.remove(index) + ", "); }
+
 		
 		bw.write((sb.substring(0, sb.length()-2) + ">").toString());
 		bw.flush();
