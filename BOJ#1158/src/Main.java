@@ -1,11 +1,3 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.LinkedList;
-import java.util.StringTokenizer;
-
 /**
  * @author Minha Gwon
  * @date 2020. 4. 21.
@@ -20,20 +12,17 @@ import java.util.StringTokenizer;
    N과 K가 주어지면 (N, K)-요세푸스 순열을 구하는 프로그램을 작성하시오. (1 ≤ K ≤ N ≤ 5,000)
   
    ex) input : 7 3
-   '1' 2  3  4  5  6  7
-    1 '2' 3  4  5  6  7 
-    1  2 '3' 4  5  6  7 
-    1  2 '4' 5  6  7
-    1  2  4 '5' 6  7 
-    1  2  4  5 '6' 7
-    1  2  4  5 '7'
-    1  2  4 '5'
-   '1' 2  4  5
-    1 '2' 4  5
-    
-    ...
-   output : <3, 6, 2, 7, 5, 1, 4>
+       output : <3, 6, 2, 7, 5, 1, 4>
  */
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.StringTokenizer;
 
 public class Main {
 
@@ -47,19 +36,18 @@ public class Main {
 		int N = Integer.parseInt(st.nextToken());
 		int K = Integer.parseInt(st.nextToken());
 		
-		LinkedList<Integer> list = new LinkedList<Integer>();
+		Queue<Integer> qu = new LinkedList<Integer>();
 		for(int i = 0; i < N; i++) {
-			list.add(i+1);
+			qu.add(i+1);
 		}
-		
-		int cnt = 0;
-		int index = 0;
-		
-		while(!list.isEmpty()) {
+
+		while(!qu.isEmpty()) {
 			for(int j = 0; j < K; j++) {
-				if(j == K) {
-					//
-				}
+				if(j == K-1) {
+					sb.append(qu.poll() + ", ");
+				} else {
+					qu.add(qu.poll());
+				}				
 			}
 		}
 		
