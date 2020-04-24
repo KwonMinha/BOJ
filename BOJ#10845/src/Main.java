@@ -1,5 +1,5 @@
 /**
- * @author gwonminha
+ * @author Minha Gwon
  * @date 2020. 4. 21.
  * 큐
  * https://www.acmicpc.net/problem/10845
