@@ -24,20 +24,18 @@ public class Main {
 			if(str.charAt(i) == '(') {
 				isVPS = false;
 				stack.push('(');
-			} else { //닫는 괄호 만났을 때 - 레이저 
-				if(isVPS == false) {
+			} else { // ) 닫는 괄호 만났을 때 
+				if(isVPS == false) { //레이저로 잘릴 때 () 
 					stack.pop();
 					count += stack.size();
 					isVPS = true;
 				
-				} else {
+				} else { //쇠막대기 끝나는 괄호 )
 					stack.pop();
 					count++;
 				}
 			}
 			if(stack.isEmpty()) {
-				//System.out.println(1111);
-				//System.out.println("c : " + count + " r : " + result);
 				result += count;
 				count = 0;
 			}
