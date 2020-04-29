@@ -29,8 +29,10 @@ public class Main2 {
 
             // 태그가 되버리거나, 혹은 문장이 끝나거나 혹은 공백을 만났을 때이다.
             if(tag || c == ' ' || c == '\n'){
-                while(!stack.isEmpty()) sb.append(stack.pop());
-                if(c != '\n') sb.append(c);
+                while(!stack.isEmpty()) 
+                	sb.append(stack.pop());
+                if(c != '\n') 
+                	sb.append(c);
             } else {
                 stack.push(c);
             }
