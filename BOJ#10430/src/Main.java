@@ -1,11 +1,11 @@
-import java.util.Scanner;
-
 /**
  * @author Minha Gwon
  * @date 2020. 5. 3.
  * 나머지
  * https://www.acmicpc.net/problem/10430
  */
+
+import java.util.Scanner;
 
 public class Main {
 
