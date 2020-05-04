@@ -13,13 +13,35 @@
 import java.util.Scanner;
 
 public class Main {
+	//main 함수 안에서 최대 100만이 되는 사이즈가 큰 배열을 선언하면 스택 사이즈 때문에 에러가 날 수 있음
+	//그래서 지역변수가 아니라 전역 변수로 선언해준 것
+	public static int[] dp; 
+	
     public static void main(String[] args) {
     	Scanner sc = new Scanner(System.in);
     	int N = sc.nextInt();
     	
-    	while(N != 1) {
-    		
-    	}
+    	dp = new int[N + 1];
+    	dp[0] = dp[1] = 0;
+    	System.out.println(solve(N));
     }
+    
+    static int solve(int n) {
+    	if(n == 1)
+    		return 0;
+    	
+    	if(dp[n] > 0) 
+    		return dp[n];
+    	
+    	dp[n] = solve(n-1) + 1;
+    	
+    	if(n % 3 == 0)
+    		dp[n] = Math.min(dp[n], solve(n/3)+1);
+    	
+    	if(n % 2 == 0) 
+    		dp[n] = Math.min(dp[n], solve(n/2)+1);
+    	
+		return dp[n];
+	}
  
 }
