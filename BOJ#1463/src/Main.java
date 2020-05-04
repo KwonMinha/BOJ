@@ -8,13 +8,12 @@
    X가 2로 나누어 떨어지면, 2로 나눈다.
    1을 뺀다.
    정수 N이 주어졌을 때, 위와 같은 연산 세 개를 적절히 사용해서 1을 만들려고 한다. 연산을 사용하는 횟수의 최솟값을 출력하시오.
+ * https://minhamina.tistory.com/31
  */
 
 import java.util.Scanner;
 
 public class Main {
-	//main 함수 안에서 최대 100만이 되는 사이즈가 큰 배열을 선언하면 스택 사이즈 때문에 에러가 날 수 있음
-	//그래서 지역변수가 아니라 전역 변수로 선언해준 것
 	public static int[] dp; 
 	
     public static void main(String[] args) {
