@@ -34,31 +34,24 @@ public class Main {
 		for(int i = A.length-2; i >= 0; i--) {
 			int n = A[i];
 			
-			if(st.peek() > n) {
-				ans.push(st.peek());
+			while(!st.isEmpty() && st.peek() <= n) {
+				st.pop();
+			}
+			
+			if(st.isEmpty()) {
+				ans.push(-1);
 				st.push(n);
 			} else {
-				while(!st.isEmpty() && st.peek() <= n) {
-					st.pop();
-				}
-			if(st.isEmpty()) {
-					ans.push(-1);
-					st.push(n);
-				} else {
-					ans.push(st.peek());
-					st.push(n);
-				}
+				ans.push(st.peek());
+				st.push(n);
 			}
+			
+			st.push(n);	
 		}
 		
-		//맨 마지막은 띄어쓰기를 안해야하기에 if-else문을 사용했지만, 백준에서 테스트해 본 결과 그냥 맨 마지막에 띄어쓰기 있어도 됨 
-		while(!ans.isEmpty()) {
-			if(ans.size() == 1)
-				bw.write(ans.pop() + "");
-			else
-				bw.write(ans.pop() + " ");		
-		}
-		
+		while(!ans.isEmpty())
+			bw.write(ans.pop() + " ");		
+
 		bw.flush();
 		bw.close();
 	}
