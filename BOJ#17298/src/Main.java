@@ -3,6 +3,7 @@
  * @date 2020. 5. 3.
  * 오큰수
  * https://www.acmicpc.net/problem/17298
+ * https://minhamina.tistory.com/27?category=699157
  */
 
 import java.io.BufferedReader;
@@ -40,7 +41,7 @@ public class Main {
 				while(!st.isEmpty() && st.peek() <= n) {
 					st.pop();
 				}
-				if(st.isEmpty()) {
+			if(st.isEmpty()) {
 					ans.push(-1);
 					st.push(n);
 				} else {
@@ -50,6 +51,7 @@ public class Main {
 			}
 		}
 		
+		//맨 마지막은 띄어쓰기를 안해야하기에 if-else문을 사용했지만, 백준에서 테스트해 본 결과 그냥 맨 마지막에 띄어쓰기 있어도 됨 
 		while(!ans.isEmpty()) {
 			if(ans.size() == 1)
 				bw.write(ans.pop() + "");
