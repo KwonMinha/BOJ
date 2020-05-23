@@ -17,16 +17,15 @@ public class Main {
 		Scanner sc = new Scanner(System.in);
 		int[] arr = new int[9];
 		boolean[] v = new boolean[9];
-		int[] output = new int[7];
 
 		for(int i = 0; i < arr.length; i++) {
 			arr[i] = sc.nextInt();
 		}
 
-		dfs(arr, v, output, 0, 9, 7);
+		dfs(arr, v, 0, 9, 7);
 	}
 
-	public static void dfs(int[] arr, boolean[] v, int[] output, int depth, int n, int r) {
+	public static void dfs(int[] arr, boolean[] v, int depth, int n, int r) {
 		if(r == 0) {
 			int sum = 0;
 			ArrayList<Integer> list = new ArrayList();
@@ -48,7 +47,7 @@ public class Main {
 		} else {
 			for(int i = depth; i < n; i++) {
 				v[i] = true;
-				dfs(arr, v, output, i+1, n, r-1);
+				dfs(arr, v, i+1, n, r-1);
 				v[i] = false;
 			}
 		}
