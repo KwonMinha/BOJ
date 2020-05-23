@@ -29,7 +29,6 @@ public class Main {
 			}
 			
 			while(x1 != x || y1 != y) {
-				//System.out.println(x1 + ", " + y1);
 				if(ans > M*N) {
 					ans = -1;
 					break;
