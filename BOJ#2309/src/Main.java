@@ -1,6 +1,6 @@
 /**
  * @author Minha Gwon
- * @date 2020. 5. 20.
+ * @date 2020. 5. 24.
  * 일곱 난쟁이 
  * https://www.acmicpc.net/problem/2309
  */
