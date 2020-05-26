@@ -25,36 +25,46 @@ public class Main {
 		for(int i = 0; i < N; i++) {
 			arr[i] = Integer.parseInt(st.nextToken());
 		}
-
-		int idx = N-1;
-		while(idx > 0 && arr[idx] < arr[idx-1]) {
-			idx--;
-		}
-
-		if(idx == 0) {
-			sb.append(-1);
+		
+		if(nextPermutaion(arr)) {
+			for(int i : arr)
+				sb.append(i + " ");
 		} else {
-			for(int i = N-1; i > idx-1; i--) {
-				if(arr[idx-1] < arr[i]) {
-					swap(arr, idx-1, i);
-
-					int j = N-1;
-					while(idx < j) {
-						swap(arr, idx, j);
-						idx++;
-						j--;
-					}
-					
-					for(int h : arr)
-						sb.append(h + " ");
-					break;
-				}
-			}
+			sb.append(-1);
 		}
 
 		bw.write(sb.toString());
 		bw.flush();
 		bw.close();
+	}
+	
+	public static boolean nextPermutaion(int[] arr) {
+		int i = arr.length-1;
+		
+		while(i > 0 && arr[i] < arr[i-1]) {
+			i--;
+		}
+
+		if(i == 0)
+			return false;
+		
+		int j = arr.length-1;
+		
+		while(arr[i-1] > arr[j]) {
+			j--;
+		}
+		
+		swap(arr, i-1, j);
+		
+		j = arr.length-1;
+		
+		while(i < j) {
+			swap(arr, i, j);
+			i++;
+			j--;
+		}
+	
+		return true;
 	}
 
 	public static void swap(int[] arr, int i, int j) {
