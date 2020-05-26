@@ -49,21 +49,18 @@ public class Main {
 			return false;
 		
 		int j = arr.length-1;
-		
 		while(arr[i-1] > arr[j]) {
 			j--;
 		}
-		
 		swap(arr, i-1, j);
 		
 		j = arr.length-1;
-		
 		while(i < j) {
 			swap(arr, i, j);
 			i++;
 			j--;
 		}
-	
+		
 		return true;
 	}
 
