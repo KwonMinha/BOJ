@@ -14,68 +14,53 @@ import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
-	static int[] input;
-	static boolean flag = false;
-	static int factorial = 1;
-	static int count = 0;
-	static StringBuilder sb = new StringBuilder();
-
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-		
-		
+		StringBuilder sb = new StringBuilder();
+
 		int N = Integer.parseInt(br.readLine());
-		input = new int[N];
 		int[] arr = new int[N];
-		
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		for(int i = 0; i < N; i++) {
-			input[i] = Integer.parseInt(st.nextToken());
-			arr[i] = i + 1;
-			factorial *= (i+1);
+			arr[i] = Integer.parseInt(st.nextToken());
 		}
-		
-		boolean[] v = new boolean[N];
-		int[] output = new int[N];
-		
-		per(arr, v, N, 0, output);
-		
+
+		int idx = N-1;
+		while(idx > 0 && arr[idx] < arr[idx-1]) {
+			idx--;
+		}
+
+		if(idx == 0) {
+			sb.append(-1);
+		} else {
+			for(int i = N-1; i > idx-1; i--) {
+				if(arr[idx-1] < arr[i]) {
+					swap(arr, idx-1, i);
+
+					int j = N-1;
+					while(idx < j) {
+						swap(arr, idx, j);
+						idx++;
+						j--;
+					}
+					
+					for(int h : arr)
+						sb.append(h + " ");
+					break;
+				}
+			}
+		}
+
 		bw.write(sb.toString());
 		bw.flush();
 		bw.close();
-		
 	}
 
-	public static void per(int[] arr, boolean[] v, int n, int r, int[] output) {
-		if(r == n) {
-			count++;
-			
-			if(flag) {
-				for(int i = 0; i < output.length; i++) {
-					sb.append(output[i] + " ");
-				}
-				flag = false;
-			}
-			
-			if(Arrays.equals(input, output)) {
-				if(count == factorial) {
-					sb.append(-1);
-				} else {
-					flag = true;
-				}
-			}
-			
-			return;
-		}
-		
-		for(int i = 0; i < n; i++) {
-			if(!v[i]) {
-				v[i] = true;
-				output[r] = arr[i];
-				per(arr, v, n, r+1, output);
-				v[i] = false;
-			}
-		}
+	public static void swap(int[] arr, int i, int j) {
+		int temp = arr[i];
+		arr[i] = arr[j];
+		arr[j] = temp;
 	}
+
 }
