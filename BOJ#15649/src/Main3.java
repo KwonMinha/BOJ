@@ -12,8 +12,7 @@ import java.io.OutputStreamWriter;
 import java.util.StringTokenizer;
 
 public class Main3 {
-	private static int N;
-	private static int M;
+	private static int N, M;
 	private static boolean[] v;
 	private static int[] output;
 	private static StringBuilder sb = new StringBuilder();
@@ -28,8 +27,7 @@ public class Main3 {
 		v = new boolean[N];
 		output = new int[M];
 
-		dfs(
-				0);
+		dfs(0);
 		
 		bw.write(sb.toString());
 		bw.close();
@@ -53,5 +51,4 @@ public class Main3 {
 			}
 		}
 	}
-
 }
