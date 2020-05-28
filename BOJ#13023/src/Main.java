@@ -9,13 +9,13 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.StringTokenizer;
 
 public class Main {
-	private static int n, m;
-	private static LinkedList<Integer>[] list;
+	private static int m;
+	private static ArrayList<Integer>[] list;
 	private static int ans = 0;
 	private static boolean[] v;
 
@@ -26,13 +26,12 @@ public class Main {
 		
 		int N = Integer.parseInt(st.nextToken());
 		int M = Integer.parseInt(st.nextToken());
-		n = N;
 		m = M;
 		
-		list = new LinkedList[N];
+		list = new ArrayList[N];
 		v = new boolean[N];
 		for(int i = 0; i < N; i++) {
-			list[i] = new LinkedList<Integer>();
+			list[i] = new ArrayList<Integer>();
 		}
 		
 		for(int i = 0; i < M; i++) {
@@ -44,44 +43,31 @@ public class Main {
 		}
 		
 		for(int i = 0; i < N; i++) {
-			dfs(i, 1);
-			
-			if(ans == 1)
-				break;
+			if(ans == 0)
+				dfs(i, 0);
 		}
 		
-		System.out.println(ans);
-
+		bw.write(Integer.toString(ans));
 		bw.flush();
 		bw.close();
 		br.close();
 	}
 	
 	public static void dfs(int start, int depth) {
-		//System.out.println(start + " d : " + depth);
-		if(depth == m || ans == 1) {
+		System.out.println(start + " " + depth);
+		if(depth == 4) {
 			ans = 1;
 			return;
 		}
 		
 		v[start] = true;
-	
-//	    for(int next : list[start]) {
-//            if(!v[next]) {
-//                dfs(next,depth+1);
-//            }
-//        }
-	    
-	    Iterator<Integer> iter = list[start].listIterator();
-		while (iter.hasNext()) {
-			int n = iter.next();
-			if (!v[n]) {
-				dfs(n, depth+1);
+		for(int i : list[start]) {
+			int next = i;
+			if(!v[next]) {
+				dfs(next, depth+1);
 			}
 		}
-		
 		v[start] = false;
-		
+	
 	}
-
 }
