@@ -18,10 +18,8 @@ public class Main {
 	private static StringBuilder sb;
 	private static ArrayList<Integer>[] list;
 	private static boolean[] v;
-	private static ArrayList<Integer> left;
-	private static ArrayList<Integer> right;
 	private static int ans = 1;
-	//private static int[] check;
+	private static int[] check;
 
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -35,8 +33,8 @@ public class Main {
 
 			list = new ArrayList[V+1];
 			v = new boolean[V+1];
-			//check = new int[V+1];
-			
+			check = new int[V+1];
+
 			for(int j = 0; j < V+1; j++) {
 				list[j] = new ArrayList<Integer>();
 			}
@@ -52,9 +50,6 @@ public class Main {
 			for(int h = 1; h <= V; h++) {
 				if(ans == 0)
 					break;
-				
-				left = new ArrayList<Integer>();
-				right = new ArrayList<Integer>();
 
 				bfs(h);
 			}
@@ -63,7 +58,7 @@ public class Main {
 				System.out.println("YES");
 			else
 				System.out.println("NO");
-			
+
 			ans = 1;
 		}
 		br.close();
@@ -73,9 +68,7 @@ public class Main {
 		Queue<Integer> queue = new LinkedList<Integer>();
 		v[start] = true; 
 		queue.add(start);
-		if(!left.contains(start) && !right.contains(start))
-			left.add(start);
-		//System.out.println("s : " + Arrays.toString(left.toArray()) + " " + Arrays.toString(right.toArray()));
+		check[start] = 1;
 
 		while(queue.size() != 0) { 
 			start = queue.poll(); 
@@ -85,30 +78,13 @@ public class Main {
 				int next = iter.next(); 
 				if(!v[next]) { 
 					v[next] = true; 
-					queue.add(next); 
-
-					if(!left.contains(next) && !right.contains(next)) {
-						if(left.contains(start)) {
-							right.add(next);
-							//System.out.println("r : " + Arrays.toString(left.toArray()) + " " + Arrays.toString(right.toArray()));
-						}
-						else {
-							left.add(next);
-							//System.out.println("l : " + Arrays.toString(left.toArray()) + " " + Arrays.toString(right.toArray()));
-						}
-					} else {
-						if((left.contains(start) && left.contains(next))
-								|| (right.contains(start) && right.contains(next))) {
-							ans = 0;
-							return;
-						} else {
-							if(left.size() + right.size() == list.length-1)
-								return;
-							break;
-						}
+					check[next] = 2;
+					if(check[start] == check[next]) {
+						ans = 0;
+						return;
 					}
+					queue.add(next);
 				}
-				v[next] = false;
 			}
 		}
 	}
