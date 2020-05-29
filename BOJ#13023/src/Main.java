@@ -44,7 +44,7 @@ public class Main {
 		
 		for(int i = 0; i < N; i++) {
 			if(ans == 0)
-				dfs(i, 0);
+				dfs(i, 1);
 		}
 		
 		bw.write(Integer.toString(ans));
@@ -55,7 +55,7 @@ public class Main {
 	
 	public static void dfs(int start, int depth) {
 		System.out.println(start + " " + depth);
-		if(depth == 4) {
+		if(depth == 5) {
 			ans = 1;
 			return;
 		}
