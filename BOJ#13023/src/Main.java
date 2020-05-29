@@ -54,7 +54,7 @@ public class Main {
 	}
 	
 	public static void dfs(int start, int depth) {
-		System.out.println(start + " " + depth);
+		//System.out.println(start + " " + depth);
 		if(depth == 5) {
 			ans = 1;
 			return;
