@@ -44,14 +44,14 @@ public class Main {
 				int n1 = Integer.parseInt(st.nextToken());
 				int n2 = Integer.parseInt(st.nextToken());
 				list[n1].add(n2);
-				//list[n2].add(n1);
+				list[n2].add(n1);
 			}
 
 			for(int h = 1; h <= V; h++) {
-				if(ans == 0)
+				if(!v[h] && !bfs(h)) {
+					ans = 0;
 					break;
-
-				bfs(h);
+				}
 			}
 
 			if(ans == 1)
@@ -64,7 +64,7 @@ public class Main {
 		br.close();
 	}
 
-	public static void bfs(int start) {
+	public static boolean bfs(int start) {
 		Queue<Integer> queue = new LinkedList<Integer>();
 		v[start] = true; 
 		queue.add(start);
@@ -72,21 +72,27 @@ public class Main {
 
 		while(queue.size() != 0) { 
 			start = queue.poll(); 
-
+			
 			Iterator<Integer> iter = list[start].listIterator();
 			while(iter.hasNext()) { 
 				int next = iter.next(); 
+				
+				if(check[start] == check[next]) {
+					return false;
+				}
+				
 				if(!v[next]) { 
 					v[next] = true; 
-					check[next] = 2;
-					if(check[start] == check[next]) {
-						ans = 0;
-						return;
-					}
+
+					if(check[start] == 1)
+						check[next] = 2;
+					else 
+						check[next] = 1;
 					queue.add(next);
 				}
 			}
 		}
+		return true;
 	}
 
 }
