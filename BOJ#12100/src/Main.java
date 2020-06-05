@@ -3,6 +3,7 @@
  * @date 2020. 6. 5.
  * 2048(Easy)
  * https://www.acmicpc.net/problem/12100
+ * 블로그 : https://minhamina.tistory.com/51
  */
 
 import java.io.BufferedReader;
