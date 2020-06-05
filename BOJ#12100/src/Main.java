@@ -13,13 +13,13 @@ import java.util.LinkedList;
 import java.util.StringTokenizer;
 
 public class Main {
-	private static long[][] B;
-	private static long[][] board;
-	private static long max = 0;
+	private static int[][] B;
+	private static int[][] board;
+	private static int max = 0;
 	private static int n;
-	private static long[] output;
-	private static LinkedList<Long> boardList;
-	private static LinkedList<Long> num;
+	private static int[] output;
+	private static LinkedList<Integer> boardList;
+	private static LinkedList<Integer> num;
 
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -28,8 +28,8 @@ public class Main {
 
 		int N = Integer.parseInt(st.nextToken());
 		n = N;
-		B = new long[N][N];
-		output = new long[5];
+		B = new int[N][N];
+		output = new int[5];
 
 		//초기 보드 블럭 값을 저장 
 		for(int i = 0; i < N; i++) {
@@ -63,7 +63,7 @@ public class Main {
 	//블록이 합쳐지기 전 방향에 따라 블록 모아주는 함수
 	public static void moveBlock() {
 		//블록 이동 결과를 저장하기 위해 초기 보드 배열을 깊은 복사함 
-		board = new long[n][n];
+		board = new int[n][n];
 		for(int i = 0; i < n; i++) {
 			for(int j = 0; j < n; j++) {
 				board[i][j] = B[i][j];
@@ -74,7 +74,7 @@ public class Main {
 			long dir = output[i]; //방향 값 저장 변수 (0 : 상 / 1 : 하 / 2 : 좌 / 3 : 우)
 
 			for(int j = 0; j < n; j++) {
-				boardList = new LinkedList<Long>();
+				boardList = new LinkedList<Integer>();
 				for(int k = 0; k < n; k++) {
 					if(dir == 0 || dir == 1) //위, 왼쪽일 경우 한 행과 열의 블록 값이 왼쪽 방향으로 모아짐 
 						boardList.add(board[k][j]);
@@ -92,10 +92,10 @@ public class Main {
 				//이동하며 0을 삭제한 만큼 왼쪽 오른쪽에 0 채워주기 
 				if(dir == 0 || dir == 2) {
 					while(boardList.size() != n)
-						boardList.addLast((long) 0);
+						boardList.addLast(0);
 				} else {
 					while(boardList.size() != n)
-						boardList.addFirst((long) 0);
+						boardList.addFirst(0);
 				}
 
 				//board에 이동 완료한 값 넣어주기 
@@ -120,7 +120,7 @@ public class Main {
 	public static void mergeBlock(long dir) {
 		//한 줄씩 merge해주기 위해 값 가져와서 LinkedList에 저장 
 		for(int i = 0; i < n; i++) {
-			num = new LinkedList<Long>();
+			num = new LinkedList<Integer>();
 
 			for(int j = 0; j < n; j++) {
 				if(dir == 0 || dir == 1)
@@ -133,7 +133,7 @@ public class Main {
 			if(dir == 0 || dir == 2) { //위쪽과 왼쪽의 경우 앞부터 합쳐짐 
 				for(int k = 0; k < num.size()-1; k++) {
 					if(!num.get(k).equals(0) && num.get(k).equals(num.get(k+1))) {
-						long val = num.get(k)*2;
+						int val = num.get(k)*2;
 						num.remove(k);
 						num.remove(k);
 						num.add(k, val);
@@ -142,7 +142,7 @@ public class Main {
 			} else { //아래쪽과 오른쪽의 경우 뒤부터 합쳐짐 
 				for(int k = num.size()-1; k > 0; k--) {
 					if(!num.get(k).equals(0) && num.get(k).equals(num.get(k-1))) {
-						long val = num.get(k)*2;
+						int val = num.get(k)*2;
 						num.remove(k);
 						num.remove(k-1);
 						num.add(k-1, val);
@@ -154,10 +154,10 @@ public class Main {
 			//merge 과정에서 줄어든 자리수 맞춰 주기 
 			if(dir == 0 || dir == 2) {
 				while(num.size() != n)
-					num.addLast((long) 0);
+					num.addLast(0);
 			} else {
 				while(num.size() != n)
-					num.addFirst((long) 0);
+					num.addFirst(0);
 			}
 
 			//merge한 값 배열에 넣어주기 
