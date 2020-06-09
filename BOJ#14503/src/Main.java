@@ -1,3 +1,10 @@
+/**
+ * @author Minha Gwon
+ * @date 2020. 6. 9.
+ * 로봇 청소기 
+ * https://www.acmicpc.net/problem/14503
+ */
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Arrays;
