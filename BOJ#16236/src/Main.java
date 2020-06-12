@@ -32,13 +32,11 @@ public class Main {
 			StringTokenizer st = new StringTokenizer(br.readLine());
 			for(int j = 0; j < N; j++) {
 				int jNum = Integer.parseInt(st.nextToken());
-				map[i][j] = jNum;
 				if(jNum == 9) {
 					SX = i;
 					SY = j;
-					map[i][j] = 0;
 				}
-
+				map[i][j] = jNum;
 			}
 		}
 
@@ -79,6 +77,7 @@ public class Main {
 	public static void bfs(int x, int y) {
 		Queue<Shark> que = new LinkedList<Shark>();
 		que.add(new Shark(x, y));
+		map[x][y] = 0;
 		check[x][y] = 0;
 
 		while(!que.isEmpty()) {
