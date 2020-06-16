@@ -58,7 +58,6 @@ public class Main {
 				break;
 			}
 		}
-
 		System.out.println(ans);
 	}
 
@@ -84,7 +83,7 @@ public class Main {
 			Shark cur = que.poll();
 			x = cur.sx;
 			y = cur.sy;
-
+			
 			for(int i = 0; i < 4; i++) {
 				int nx = x + dir[i][0];
 				int ny = y + dir[i][1];
@@ -94,7 +93,7 @@ public class Main {
 
 				if(check[nx][ny] != -1 || map[nx][ny] > size)
 					continue;
-
+				
 				check[nx][ny] = check[x][y] + 1;
 
 				if(map[nx][ny] != 0 && map[nx][ny] < size) {
