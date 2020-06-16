@@ -1,7 +1,9 @@
 /**
  * @author Minha Gwon
  * @date 2020. 6. 16.
- * 치킨 배달
+ * 치킨 배달 
+ * - 재귀로 조합 구현 
+ * - 집은 2차원 배열로, 치킨 가게는 LinkedList로 관리 
  * https://www.acmicpc.net/problem/15686
  */
 
@@ -38,6 +40,7 @@ public class Main {
 		System.out.println(ans);
 	}
 	
+	//재귀를 이용한 조합으로 M개의 치킨 가게 고름 
 	public static void pick(int depth, int r) {
 		if(r == 0) {
 			cCheck = new ArrayList<>();
