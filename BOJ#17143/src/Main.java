@@ -1,14 +1,14 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Scanner;
-
 /**
  * @author Minha Gwon
  * @date 2020. 6. 16.
  * 낚시왕
  * https://www.acmicpc.net/problem/17143
  */
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Scanner;
 
 public class Main {
 	public static int R, C, M;
@@ -29,40 +29,26 @@ public class Main {
 			int s = sc.nextInt();
 			int d = sc.nextInt();
 			int z = sc.nextInt();
-
 			shark.add(new Shark(r-1, c-1, s, d, z));
 			map[r-1][c-1] = z;
 		}
 
-
 		Collections.sort(shark);
-		//		for(Shark s : shark) {
-		//			System.out.println(s.r + " " + s.c);
-		//		}
-
-		System.out.println("처음 map");
-		printMap();
 
 		for(int i = 0; i < C; i++) {
-			System.out.println("다시 시작 ");
+			Collections.sort(shark);
 			for(int j = 0; j < shark.size(); j++) {
-				System.out.println("상어 잡아먹어야함 ");
 				Shark s = shark.get(j);
 				if(s.c == i) {
 					ans += s.z;
 					map[s.r][s.c] = 0;
-					shark.remove(s);
-					System.out.println("낚시꾼 움직이고 상어 잡음 ");
-					printMap();
+					shark.remove(s); 
+					break;
 				}
 			}
 			move();
-			System.out.println("상어 이동 후 ");
-			printMap();
 		}
-		
 		System.out.println(ans);
-
 	}
 
 	public static void printMap() {
@@ -83,22 +69,31 @@ public class Main {
 			Shark s = shark.get(x);
 			int nr, nc, nd;
 
-			System.out.println("상어 - r : " + s.r + ", c : " + s.c + ", 크기 : " + s.z + ", 방향 : " + s.d + ", 속력 : " + s.s);
-
 			//상어 이동 
 			if(s.d == 1 || s.d == 2) { //상어의 방향이 위, 아래일 경우 
-				nr = s.r + s.s;
+				nr = s.r;
 				nc = s.c;
 				nd = s.d;
 
-				while(nr > R-1) {
-					nr = nr - R;
+				int speedCnt = s.s;
+				while(speedCnt > 0) {
 					if(nd == 1) {
-						nd = 2;
+						nr--;
+						if(nr < 0) {
+							nr++;
+							nr++;
+							nd = 2;
+						}
 					} else {
-						nd = 1;
+						nr++;
+						if(nr >= R) {
+							nr--;
+							nr--;
+							nd = 1;
+						}
 					}
-				}			
+					speedCnt--;
+				}		
 			} else { //상어의 방향이 왼쪽, 오른쪽일 경우 
 				nr = s.r;
 				nc = s.c;
@@ -136,6 +131,7 @@ public class Main {
 					for(int i = 0; i < shark.size(); i++) {
 						if(shark.get(i).r == nr && shark.get(i).c == nc) {
 							shark.remove(i);
+							x--;
 						}
 					}
 					map[nr][nc] = s.z;
@@ -144,12 +140,10 @@ public class Main {
 					s.d = nd;
 				} else { //크기가 작은 경우 > 현재 상어가 먹힘 
 					shark.remove(s);
+					x--;
 				}
 			}
-			//printMap();
 		}
-		
-
 	}
 
 }
