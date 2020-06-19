@@ -53,9 +53,8 @@ public class Main {
 
 	public static void printMap() {
 		for(int i = 0; i < R; i++) {
-			for(int j = 0; j < C; j++) {
+			for(int j = 0; j < C; j++)
 				System.out.print(map[i][j] + " ");
-			}
 			System.out.println();
 		}
 		System.out.println();
