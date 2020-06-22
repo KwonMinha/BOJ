@@ -73,7 +73,7 @@ public class Main {
 				nr = s.r;
 				nc = s.c;
 				nd = s.d;
-
+				
 				int speedCnt = s.s;
 				while(speedCnt > 0) {
 					if(nd == 1) {
