@@ -3,7 +3,7 @@
  * 2020. 10. 13.
  * URL : https://www.acmicpc.net/problem/19236
  * BLOG : https://minhamina.tistory.com/67
- * BOJ#19236 - 낚시왕 
+ * BOJ#19236 - 청소년 상어  
  */
 
 import java.util.*;
@@ -32,9 +32,6 @@ public class Main {
 			}
 		}
 
-//		System.out.println("first map");
-//		printMap();
-
 		int sx = 0, sy = 0; //상어의 위치
 		int sd = fish[map[0][0]].dir; //초기 상어의 방향 
 		int eat = map[0][0]; //(0, 0) 물고기 먹음 
@@ -56,12 +53,10 @@ public class Main {
 		}
 		
 		//fish 배열 복사 
-		//Fish[] tempFish = fish.clone(); //X 안됨 
-		//System.arraycopy(fish, 0, tempFish, 0, fish.length); //X 안됨 
 		Fish[] tempFish = new Fish[fish.length];
-		for(int i=1; i<=16; i++)
+		for(int i=1; i<=16; i++) 
             tempFish[i] = new Fish(fish[i].num, fish[i].x, fish[i].y, fish[i].dir, fish[i].alive);
-		
+	
 		//물고기 이동 
 		moveFish();
 		
@@ -137,7 +132,6 @@ public class Main {
 				}
 			}
 		}
-
 	}
     
 }
@@ -156,5 +150,4 @@ class Fish {
 		this.dir = dir;
 		this.alive = alive;
 	}
-
 }
