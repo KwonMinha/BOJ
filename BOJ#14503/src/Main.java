@@ -1,179 +1,86 @@
 /**
  * @author Minha Gwon
- * @date 2020. 6. 9.
- * 로봇 청소기 
- * https://www.acmicpc.net/problem/14503
+ * 2020. 10. 16.
+ * URL : https://www.acmicpc.net/problem/14503
+ * #14503 - 로봇 청소기 
  */
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.StringTokenizer;
+import java.util.*;
+import java.io.*;
 
 public class Main {
-	public static int N, M, r, c, d;
+	public static int N, M, R, C, D;
 	public static int[][] map;
-	public static boolean[][] visited;
-	public static int[][] dir = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}}; //위 - 왼쪽 - 아래 - 오른쪽 
-	public static int ans;
+	public static int[] dx = {-1, 0, 1, 0};
+	public static int[] dy = {0, -1, 0, 1};
+	public static int ans = 0;
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
+		StringTokenizer st = new StringTokenizer(br.readLine(), " ");
 		N = Integer.parseInt(st.nextToken());
 		M = Integer.parseInt(st.nextToken());
-		st = new StringTokenizer(br.readLine());
-		r = Integer.parseInt(st.nextToken());
-		c = Integer.parseInt(st.nextToken());
-		d = Integer.parseInt(st.nextToken());
+		
+		st = new StringTokenizer(br.readLine(), " ");
+		R = Integer.parseInt(st.nextToken());
+		C = Integer.parseInt(st.nextToken());
+		D = Integer.parseInt(st.nextToken());
+		
+		//0 1 2 3 상 좌 하 우 
+		if(D == 1)
+			D = 3;
+		else if(D == 3)
+			D = 1;
+		
 		map = new int[N][M];
-		visited = new boolean[N][M];
 		for(int i = 0; i < N; i++) {
-			st = new StringTokenizer(br.readLine());
+			st = new StringTokenizer(br.readLine(), " ");
 			for(int j = 0; j < M; j++) {
 				map[i][j] = Integer.parseInt(st.nextToken());
 			}
-		}	
-		
-//		for(int i = 0; i < N; i++) {
-//			for(int j = 0; j < M; j++) {
-//				System.out.print(map[i][j]);
-//			}
-//			System.out.println();
-//		}
-		ans++;
-		solve();
-		System.out.println(ans);
-	}
-
-	public static void solve() {
-		while(!isStop()) {
-			System.out.println("r : " + r + ", c : " + c + ", d : " + d);
-			
-			if(!visited[r][c]) {
-				ans++;
-				visited[r][c] = true;
-			}
-
-			NextNode next = isLeft();
-			if(next.r != 0 && next.c != 0) {
-				r = next.r;
-				c = next.c;
-				d = next.d;
-			} else {
-				d = next.d;
-			}
 		}
-	}
-	
-	public static boolean isStop() {
+		
+		int cnt = 0;
 		boolean flag = true;
-		for(int i = 0; i < 4; i++) {
-			int dx = r + dir[i][0];
-			int dy = c + dir[i][1];
-//			System.out.println(dx + " " + dy);
-//			System.out.println(visited[dx][dy]);
-//			System.out.println(map[dx][dy]);
-			
-			if(dx == 0 || dx == M-1 || dy == 0 || dy == N-1 || map[dx][dy] == 1 || visited[dx][dy])
-				continue;
-			else {
-				flag = false;
-				break;
-			}
-		}
-		
-		if(flag) {
-			int dx = 0, dy = 0;
-			if(d == 0) {
-				dx = r + dir[0][0];
-				dy = r + dir[1][1];
-			} else if(d == 3) {
-				dx = r + dir[3][0];
-				dy = r + dir[3][1];
-			} else if(d == 2) {
-				dx = r + dir[2][0];
-				dy = r + dir[2][1];
-			} else if(d == 1) {
-				dx = r + dir[1][0];
-				dy = r + dir[1][1];
+		while(true) {
+			if(flag == true) {
+				
+				map[R][C] = 2; //청소하기 
+				ans++;
 			}
 			
-			if(map[dx][dy] == 1) {
-				return true;
+			if(cnt == 4) { //4방향 모두 청소가 되어있거나 벽인 경우 
+				int nx = R + dx[(D+2)%4];
+				int ny = C + dy[(D+2)%4];
+				
+				if(map[nx][ny] == 1) {
+					break;
+				} else {
+					R = nx;
+					C = ny;
+					
+					cnt = 0;
+				}
+			}
+			
+			int nd = D+1; //왼쪽 방향 
+			nd %= 4;
+			int nx = R + dx[nd];
+			int ny = C + dy[nd];
+			
+			if(map[nx][ny] == 0) { //청소할 공간이 있다면 방향 바꾸고, 그 위치로 이동 
+				D = nd;
+				R = nx;
+				C = ny;
+				cnt = 0;
+				flag = true;
 			} else {
-				r = dx;
-				c = dy;
+				D = nd;
+				cnt++;
+				flag = false;
 			}
 		}
 		
-		return false;
-	}
-	
-	public static NextNode isLeft() {
-		System.out.println("left");
-		int dx = 0;
-		int dy = 0;
-		int dd = d;
-		
-		System.out.println("s 전임 ");
-		switch(dd) {
-		case 0: //위쪽 
-			System.out.println("위 일 떄 ");
-			dx = r + dir[1][0];
-			dy = c + dir[1][1];
-			dd = 3;
-			break;
-		case 3: //왼쪽 
-			System.out.println("왼  일 떄 ");
-			dx = r + dir[2][0];
-			dy = c + dir[2][1];
-			dd = 2;
-			
-			System.out.println("!!!! r : " + dx);
-			break;
-		case 2: //아래쪽 
-			System.out.println("아래  일 떄 ");
-		    dx = r + dir[3][0];
-			dy = c + dir[3][1];
-			dd = 1;
-			break;
-		case 1: //오른쪽 
-			System.out.println("오른  일 떄 ");
-			dx = r + dir[0][0];
-			dy = c + dir[0][1];
-			dd = 0;
-			break;
-		} 
-		
-		NextNode next = new NextNode();
-		if(!visited[dx][dy] && map[dx][dy] != 1) {
-			next.r = dx;
-			next.c = dy;
-			next.d = dd;
-			
-			System.out.println(r + " " + c);
-			return next;
-		} else {
-			next.r = 0;
-			next.c = 0;
-			next.d = dd;
-			return next;
-		}
-	}
-
-}
-
-class NextNode {
-	int r;
-	int c;
-	int d;
-	
-	public NextNode() { }
-	
-	NextNode(int r, int c, int d) {
-		this.r = r;
-		this.c = c;
-		this.d = d;
+		System.out.println(ans);
 	}
 }
