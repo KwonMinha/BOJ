@@ -1,3 +1,10 @@
+/**
+ * @author Minha Gwon
+ * @date 2021. 1. 2.
+ * 이진 검색 트리 
+ * https://www.acmicpc.net/problem/5639
+ */
+
 import java.util.Scanner;
 
 class Node {
