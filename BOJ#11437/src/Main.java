@@ -1,36 +1,24 @@
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Scanner;
-
 /**
  * @author Minha Gwon
  * @date 2021. 1. 4.
  * LCA
  * https://www.acmicpc.net/problem/11437
+ * BLOG - https://minhamina.tistory.com/99
  */
 
-class Node {
-	int data;
-	Node parent;
-
-	Node(int data) {
-		this.data = data;
-	}
-}
+import java.util.LinkedList;
+import java.util.Scanner;
 
 public class Main {
 	public static LinkedList<Integer>[] adjList;
-	public static boolean[] visited;
-	public static int tempCur, tempParent, tempDepth, answer = 0;
-
+	public static int[] parent;
+	public static int[] depth;
 
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
+		
 		int N = sc.nextInt();
-
 		adjList = new LinkedList[N+1];
-		visited = new boolean[N+1];
-
 		for (int i = 1; i <= N; i++) {
 			adjList[i] = new LinkedList<Integer>();
 		}
@@ -42,72 +30,50 @@ public class Main {
 			adjList[a].add(b);
 			adjList[b].add(a);
 		}
+		
+		parent = new int[N+1];
+		depth = new int[N+1];
+		
+		dfs(1, 0, -1);
 
 		int M = sc.nextInt();
 		for(int i = 0; i < M; i++) {
-			int v1 = sc.nextInt();
-			int v2 = sc.nextInt();
-			Arrays.fill(visited, false);
-			dfs(1, v1, -1, 0);
-
-			Arrays.fill(visited, false);
-			dfs(1, v2, -1, 0);
-
-			System.out.println(answer);
-			tempParent = 0;
-			tempDepth = 0;
-			answer = 0;
-			System.out.println("----------------");
+			int a = sc.nextInt();
+			int b = sc.nextInt();
+			
+			// LCA 시작 
+			int depthA = depth[a];
+			int depthB = depth[b];
+		
+			while(depthA > depthB) {
+				a = parent[a];
+				depthA--;
+			}
+			
+			while(depthB > depthA) {
+				b = parent[b];
+				depthB--;
+			}
+			
+			while(a != b) {
+				a = parent[a];
+				b = parent[b];
+			}
+			
+			System.out.println(a);
 		}
 	}
 
-	public static void dfs(int cur, int data, int parent, int depth) {
-		if(cur == data) {
-			parent(data, depth, parent);
-			System.out.println("d : " + depth + ", p : " + parent);
-			return;
-		} 
-
-		visited[cur] = true;
-		depth++;
+	// DFS를 통해 깊이와 부모 노드 배열에 저장 
+	public static void dfs(int cur, int d, int p) {
+		depth[cur] = d;
+		parent[cur] = p;
+		
 		for(int next : adjList[cur]) {
-			if(!visited[next]) {
-				dfs(next, data, cur, depth);
+			if(next != p) {
+				dfs(next, d+1, cur);
 			}
 		}
-	}
-
-	public static void parent(int cur, int depth, int parent) {
-		if(tempDepth == 0 && tempParent == 0) {
-			tempDepth = depth;
-			tempParent = parent;
-			tempCur = cur;
-		} else {
-			System.out.println(tempDepth + " " + tempParent + " " + depth + " " + parent);
-			if(tempDepth < depth) {
-				if(tempCur == parent) {
-					System.out.println("t1 cur : " + cur + ", tempCur : " + tempCur);
-					answer = tempCur;
-				} else {
-					answer = tempParent;
-				}
-			} else if(tempDepth == depth) { 
-				if(tempParent == parent) {
-					answer = parent;
-				} else {
-					
-				}
-				
-			} else {
-				if(cur == tempParent) {
-					System.out.println("t2 cur : " + cur + ", tempCur : " + tempCur);
-					answer = cur;
-				} else {
-					answer = parent;
-				}
-			}
-		}
-		System.out.println();
 	}
 
 }
