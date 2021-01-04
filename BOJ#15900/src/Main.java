@@ -5,18 +5,25 @@
  * https://www.acmicpc.net/problem/15900
  */
 
-import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.LinkedList;
-import java.util.Scanner;
+import java.util.StringTokenizer;
 
 public class Main {
 	static LinkedList<Integer>[] adjList;
 	static boolean[] visited;
 	public static int answer = 0;
 
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int N = Integer.parseInt(br.readLine());
+		StringTokenizer st;
+		
+		
+		//Scanner sc = new Scanner(System.in);
+		//int N = sc.nextInt();
 		adjList = new LinkedList[N+1];
 		visited = new boolean[N+1];
 
@@ -25,8 +32,13 @@ public class Main {
 		}
 
 		for(int i = 0; i < N-1; i++) {
-			int a = sc.nextInt();
-			int b = sc.nextInt();
+			st = new StringTokenizer(br.readLine());
+
+			int a = Integer.parseInt(st.nextToken());
+			int b = Integer.parseInt(st.nextToken());
+			
+//			int a = sc.nextInt();
+//			int b = sc.nextInt();
 
 			adjList[a].add(b);
 			adjList[b].add(a);
@@ -35,6 +47,8 @@ public class Main {
 		dfs(1, 0, 0); // 각 노드의 부모 노드 구하기 
 		
 		System.out.println((answer % 2) == 0 ? "No" : "Yes");
+		
+		br.close();
 	}
 
 	public static void dfs(int cur, int p, int cnt) {
