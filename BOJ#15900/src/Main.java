@@ -3,7 +3,7 @@
  * @date 2021. 1. 5.
  * 나무 탈출 
  * https://www.acmicpc.net/problem/15900
- * BLOG - 
+ * BLOG - https://minhamina.tistory.com/102
  */
 
 import java.io.BufferedReader;
