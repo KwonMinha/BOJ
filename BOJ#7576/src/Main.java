@@ -3,7 +3,7 @@
  * @date 2021. 1. 15.
  * 토마토
  * https://www.acmicpc.net/problem/7576
- * BLOG - 
+ * BLOG - https://minhamina.tistory.com/110
  */
 
 import java.util.ArrayList;
