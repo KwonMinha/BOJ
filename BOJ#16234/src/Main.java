@@ -3,10 +3,10 @@
  * @date 2021. 1. 20.
  * 인구 이동
  * https://www.acmicpc.net/problem/16234
+ * BLOG - https://minhamina.tistory.com/115
  */
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
@@ -23,7 +23,7 @@ class Point {
 
 public class Main {
 
-	public static int[][] map, unionMap;
+	public static int[][] map;
 	public static boolean[][] visited;
 	public static int[] dx = {-1, 0, 1, 0};
 	public static int[] dy = {0, -1, 0, 1};
@@ -46,24 +46,21 @@ public class Main {
 
 		while(true) {	
 			boolean isBfs = false;
-			
+
 			visited = new boolean[N][N];
 			for(int i = 0; i < N; i++) {
 				for(int j = 0; j < N; j++) {
 					if(!visited[i][j]) { // 이미 연합을 이루었던 경우는 pass 
-						unionMap = new int[N][N];
 
-						if(bfs(i, j)) {
+						if(bfs(i, j))
 							isBfs = true;
-							movePeople();
-						}
 					}
-					
+
 				}
 			}
-			
+
 			if(!isBfs) {
-				// 전체 정점을 다 돌면서, 인구 이동이 한번이라도 안 일어난 경우 break;
+				// 전체 정점을 다 돌면서, 인구 이동이 한번이라도 안 일어나 isBfs가 false라면 break;
 				break;
 			} else {
 				// 전체 정점을 도는 것을 하루로 생각한다면, 하루에 각 정점들에서 총 n번의 인구 이동이 일어날 수 있다. 
@@ -87,7 +84,12 @@ public class Main {
 
 	// BFS를 이용해 국경선을 공유하면서, 인구 차이도 만족하는 나라를 찾음 
 	public static boolean bfs(int x, int y) {
-		boolean isUnion = false; // 인구 이동이 가능한지 판별 
+		boolean isUnion = false; // 인구 이동이 한번도 일어나지 않는다면 false 반환 
+		
+		ArrayList<Point> unionList = new ArrayList<>(); // 연합에 속하는 나라의 좌표 리스트 
+		unionList.add(new Point(x, y));
+		int count = 1; // 연합을 이루고 있는 나라의 개수 (처음엔 (x, y) 넣으니 1부터 시작  
+		int sum = map[x][y];
 
 		Queue<Point> queue = new LinkedList<>();
 		queue.add(new Point(x, y));
@@ -96,8 +98,6 @@ public class Main {
 		while(!queue.isEmpty()) {
 			int curX = queue.peek().x;
 			int curY = queue.poll().y;
-
-			unionMap[curX][curY] = 1;
 
 			for(int i = 0; i < 4; i++) { // 상좌하우 검사 
 				int nx = curX + dx[i];
@@ -113,54 +113,26 @@ public class Main {
 				int val = Math.abs(map[curX][curY] - map[nx][ny]);
 
 				if(val >= L && val <= R && !visited[nx][ny]) {
+					unionList.add(new Point(nx, ny));
+					count++;
+					sum += map[nx][ny];
+					
 					visited[nx][ny] = true;
-					isUnion = true; // 인구 이동이 가능한 나라를 발견했으니 true 
 					queue.add(new Point(nx, ny));
 				}
 			}
 		}
-
-		return isUnion;
-	}
-
-	// 인구 이동 시작 
-	public static void movePeople() {
-		System.out.println("인구 이동 시작");
-		print(unionMap);
-
-		ArrayList<Point> unionList = new ArrayList<>(); // 연합에 속하는 나라의 좌표 리스트 
-		ArrayList<Integer> peopleList = new ArrayList<>(); // 연합에 속하는 나라의 인구수 리스트 
-		int count = 0; // 연합을 이루고 있는 칸의 개수
-
-		for(int i = 0; i < N; i++) { 
-			for(int j = 0; j < N; j++) {
-				if(unionMap[i][j] == 1) {
-					unionList.add(new Point(i, j)); //좌표 저장 
-					peopleList.add(map[i][j]); // 인구수 저장 
-					count++; // 칸수 추가 
-				}
+		
+		if(unionList.size() > 1) { // (x, y) 좌표를 기준으로 연합이 이루어진 경우 
+			isUnion = true; // 인구 이동이 일어난 경우 true 반환 
+			int result = sum / count;
+			
+			for(int i = 0; i < unionList.size(); i++) { // 연합 인구수 업데이트 
+				Point p = unionList.get(i);
+				map[p.x][p.y] = result;
 			}
 		}
-
-		// 연합의 총 인구수 
-		int peopleCount = 0;
-		for(int i = 0; i < peopleList.size(); i++) {
-			peopleCount += peopleList.get(i);
-		}
-
-		// 연합을 이루는 각 칸의 인구수 = 연합의 인구수 / 연합을 이루고 있는 칸의 개수 
-		int unionCount = peopleCount / count;
-
-		// 연합에 속하는 나라의 인구수를 unionCount로 갱신 
-		for(int i = 0; i < unionList.size(); i++) {
-			int x = unionList.get(i).x;
-			int y = unionList.get(i).y;
-
-			map[x][y] = unionCount;
-		}
-
-		System.out.println("* 인구 이동 완료");
-		print(map);
+		
+		return isUnion;
 	}
-
 }
