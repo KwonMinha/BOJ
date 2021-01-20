@@ -55,7 +55,6 @@ public class Main {
 						if(bfs(i, j))
 							isBfs = true;
 					}
-
 				}
 			}
 
@@ -72,20 +71,10 @@ public class Main {
 		System.out.println(answer);
 	}
 
-	public static void print(int[][] map) {
-		for(int i = 0; i < N; i++) {
-			for(int j = 0; j < N; j++) {
-				System.out.print(map[i][j] + " ");
-			}
-			System.out.println();
-		}
-		System.out.println();
-	}
-
 	// BFS를 이용해 국경선을 공유하면서, 인구 차이도 만족하는 나라를 찾음 
 	public static boolean bfs(int x, int y) {
 		boolean isUnion = false; // 인구 이동이 한번도 일어나지 않는다면 false 반환 
-		
+
 		ArrayList<Point> unionList = new ArrayList<>(); // 연합에 속하는 나라의 좌표 리스트 
 		unionList.add(new Point(x, y));
 		int count = 1; // 연합을 이루고 있는 나라의 개수 (처음엔 (x, y) 넣으니 1부터 시작  
@@ -116,23 +105,23 @@ public class Main {
 					unionList.add(new Point(nx, ny));
 					count++;
 					sum += map[nx][ny];
-					
+
 					visited[nx][ny] = true;
 					queue.add(new Point(nx, ny));
 				}
 			}
 		}
-		
+
 		if(unionList.size() > 1) { // (x, y) 좌표를 기준으로 연합이 이루어진 경우 
 			isUnion = true; // 인구 이동이 일어난 경우 true 반환 
 			int result = sum / count;
-			
+
 			for(int i = 0; i < unionList.size(); i++) { // 연합 인구수 업데이트 
 				Point p = unionList.get(i);
 				map[p.x][p.y] = result;
 			}
 		}
-		
+
 		return isUnion;
 	}
 }
