@@ -5,75 +5,82 @@
  * https://www.acmicpc.net/problem/1389
  */
 
-import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Scanner;
-import java.util.Stack;
 
 public class Main {
+	public static LinkedList<Integer>[] adjList;
 	public static boolean[] visited;
-	public static int[][] adjArray; 
-	public static Stack<Integer> stack;
-	public static int min;
+	public static int[] check; // BFS 수행시 이동 거리(탐색 너비) 측정 
 
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
 		int M = sc.nextInt();
 
-		adjArray = new int[N+1][N+1];
+		adjList = new LinkedList[N+1];
+		for(int i= 1; i < N+1; i++) {
+			adjList[i] = new LinkedList<>();
+		}
 
 		for(int i = 0; i < M; i++) {
 			int a = sc.nextInt();
 			int b = sc.nextInt();
 
-			adjArray[a][b] = 1;
-			adjArray[b][a] = 1;
+			adjList[a].add(b);
+			adjList[b].add(a);
 		}
 
+		int min = Integer.MAX_VALUE;
 		int ans = 0;
-		int ansCount = Integer.MAX_VALUE;
-		
+
 		for(int i = 1; i < N+1; i++) {
-			stack = new Stack<>();
-			visited = new boolean[N+1];
-			int result = 0;
-			
+			int sum = 0;
 			for(int j = 1; j < N+1; j++) {
-				if(i != j) {
-					min = Integer.MAX_VALUE;
-					dfs(i, j);
-					result += (min-1); // 자기자신 -1 
+				if(j != i) {
+					visited = new boolean[N+1];
+					check = new int[N+1];
+					sum += bfs(i, j, 0);
 				}
 			}
-			
-			if(ansCount > result) {
+
+			if(sum < min) {
 				ans = i;
-				ansCount = result;
+				min = Math.min(min, sum);
 			}
 		}
-		
+
 		System.out.println(ans);
-
-
 	}
 
-	public static void dfs(int start, int end) {
+	public static int bfs(int start, int find, int cnt) {
+		Queue<Integer> queue = new LinkedList<>();
+		queue.add(start);
 		visited[start] = true;
-		stack.push(start); // 스택에 값을 넣어줌
 
-		if(start == end) { // 목표 노드에 왔다면
-			min = Math.min(min, stack.size());
-		}
+		while(!queue.isEmpty()) {
+			int cur = queue.poll();	
 
-		for(int i = 1; i <= adjArray.length-1; i++) {
-			if(adjArray[start][i] == 1 && !visited[i]) {
-				dfs(i, end);
-				// dfs 후에 방문 노드를 false로 만들어주어 해당 노드를 방문하지 않은 것으로 해줌 -> 모든 경로를 구하기 위함 
-				visited[i] = false; 
+			Iterator<Integer> iter = adjList[cur].iterator();
+			while(iter.hasNext()) {
+
+				int next = iter.next();
+
+				if(!visited[next]) { 
+					// BFS를 수행하며 한 칸씩 너비를 늘려나갈때마다 1씩 추가됨 
+					check[next] = check[cur] + 1; // 최소 거리 측정을 위함 ex) 1 -> 5의 경우 1,3,4,5가 아니라 1,4,5를 거르기 위함.
+
+					if(next == find) { // 종료 정점 
+						return check[next]; // 최소 친구 단계의 합 
+					}
+
+					visited[next] = true; 
+					queue.add(next); 
+				} 
 			}
 		}
-
-		stack.pop(); //dfs 빠져 나올땐 pop()
+		return 0;
 	}
-
 }
