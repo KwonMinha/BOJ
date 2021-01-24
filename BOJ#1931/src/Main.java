@@ -20,10 +20,10 @@ class Time implements Comparable<Time> {
 
     @Override
     public int compareTo(Time t) {
-        if (this.end > t.end) {
+        if (this.end > t.end) { // 끝나는 시간 기준 오름차순 정렬 
             return 1;
         } else if (this.end == t.end) {
-            if(this.start > t.start) {
+            if(this.start > t.start) { // 끝나는 시간 같다면 시작 시간 기준 오름차순 
             	return 1;
             } else {
             	return -1;
@@ -50,18 +50,12 @@ public class Main {
 		
 		Collections.sort(timeList);
 		
-//		for(Time t : timeList) {
-//			System.out.println(t.start + " " + t.end);
-//		}
-		
 		int ans = 1;
 		int endTime = timeList.get(0).end;
-		while(endTime != timeList.get(timeList.size()-1).end) {
-			for(int i = 1; i < timeList.size(); i++) {
-				if(timeList.get(i).start >= endTime) {
-					endTime = timeList.get(i).end;
-					ans++;
-				}
+		for(int i = 1; i < timeList.size(); i++) {
+			if(timeList.get(i).start >= endTime) {
+				endTime = timeList.get(i).end;
+				ans++;
 			}
 		}
 		
