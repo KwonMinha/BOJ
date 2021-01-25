@@ -1,94 +1,96 @@
 /**
  * @author Minha Gwon
- * @date 2020. 6. 16.
- * 치킨 배달 
- * - 재귀로 조합 구현 
- * - 집은 2차원 배열로, 치킨 가게는 LinkedList로 관리 
+ * @date 2021. 1. 25.
+ * 치킨배달 
  * https://www.acmicpc.net/problem/15686
  */
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.Scanner;
+
+class Point {
+	int x;
+	int y;
+	
+	Point(int x, int y) {
+		this.x = x;
+		this.y = y;
+	}
+}
 
 public class Main {
 	public static int N, M;
-	public static int[][] map;
-	public static LinkedList<Chicken> cList;
-	public static int cCnt;
-	public static ArrayList<Integer> cCheck;
-	public static boolean[] visited;
+	public static int[][] map; // 전체 도시 정보 저장 
+	public static boolean[] visited; // 조합에 사용할 방문 체크 배열 
+	public static ArrayList<Point> chickenList; // 전체 치킨집 저장 
+	public static ArrayList<Point> homeList;// 전체 집 저장 
 	public static int ans = Integer.MAX_VALUE;
 
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 		N = sc.nextInt();
 		M = sc.nextInt();
+		
 		map = new int[N][N];
-		cList = new LinkedList<>();
+		chickenList = new ArrayList<>();
+		homeList = new ArrayList<>();
+		
 		for(int i = 0; i < N; i++) {
 			for(int j = 0; j < N; j++) {
 				map[i][j] = sc.nextInt();
 				if(map[i][j] == 2) {
-					cList.add(new Chicken(i, j));
+					chickenList.add(new Point(i, j));
+				} else if(map[i][j] == 1) {
+					homeList.add(new Point(i, j));
 				}
 			}
 		}
-		cCnt = cList.size();
-		visited = new boolean[cCnt];
-		pick(0, M);
+		
+		visited = new boolean[chickenList.size()];
+		combination(M, 0);
+		
 		System.out.println(ans);
 	}
 	
-	//재귀를 이용한 조합으로 M개의 치킨 가게 고름 
-	public static void pick(int depth, int r) {
+	// 조합을 이용해 총 M개의 치킨집 선택 
+	public static void combination(int r, int start) {
 		if(r == 0) {
-			cCheck = new ArrayList<>();
-			for(int i = 0; i < cList.size(); i++) {
-				if(visited[i] == true) 
-					cCheck.add(i);
-			}
-			getDist();
-			
-			return;
-		}
-		
-		if(depth == cCnt) {
+			chickenDest();
 			return;
 		} else {
-			visited[depth] = true;
-			pick(depth+1, r-1);
-			visited[depth] = false;
-			pick(depth+1, r);
-		}
-	}
-	
-	public static void getDist() {
-		int res = 0;
-		for(int i = 0; i < N; i++) {
-			for(int j = 0; j < N; j++) {
-				if(map[i][j] == 1) {
-					int min = Integer.MAX_VALUE;
-					for(int k = 0; k < cCheck.size(); k++) {
-						int cx = cList.get(cCheck.get(k)).cx;
-						int cy = cList.get(cCheck.get(k)).cy;
-						int dist = Math.abs(i - cx) + Math.abs(j - cy);
-						min = Math.min(min, dist);
-					}
-					res += min;
-				}
+			for(int i = start; i < chickenList.size(); i++) {
+				visited[i] = true;
+				combination(r-1, i+1);
+				visited[i] = false;
 			}
 		}
-		ans = Math.min(res, ans);
 	}
 	
-}
-
-class Chicken {
-	int cx, cy;
-	
-	Chicken(int cx, int cy) {
-		this.cx = cx;
-		this.cy = cy;
+	// 치킨 거리 구하기 
+	public static void chickenDest() {
+		ArrayList<Point> pickChicken = new ArrayList<>(); // 조합으로 선택된 치킨집 저장 
+		for(int i = 0; i < chickenList.size(); i++) {
+			if(visited[i]) 
+				pickChicken.add(new Point(chickenList.get(i).x, chickenList.get(i).y));
+		}
+		
+		int sumDest = 0; // 치킨 거리 총합 
+		for(int i = 0; i < homeList.size(); i++) {
+			int hx = homeList.get(i).x;
+			int hy = homeList.get(i).y;
+			
+			int minDest = Integer.MAX_VALUE; // 최소 치킨 거리 
+			
+			for(int j = 0; j < pickChicken.size(); j++) {
+				int cx = pickChicken.get(j).x;
+				int cy = pickChicken.get(j).y;
+				
+				int dest = Math.abs(hx-cx) + Math.abs(hy-cy); // 치킨 거리 
+				minDest = Math.min(minDest, dest);
+			}
+			sumDest += minDest;
+		}
+		
+		ans = Math.min(ans, sumDest);
 	}
 }
