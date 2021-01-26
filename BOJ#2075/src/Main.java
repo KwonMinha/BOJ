@@ -26,6 +26,7 @@ public class Main {
 		}
 	
 		while(N != 1) {
+			pq.poll();
 			N--;
 		}
 		
