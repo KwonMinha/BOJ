@@ -5,16 +5,13 @@
  * https://www.acmicpc.net/problem/17144
  */
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Queue;
 import java.util.Scanner;
 
 public class Main {
 	static int R, C, T;
 	static int[][] map;
-	//static boolean[][] visited;
-	static ArrayList<Point> dustList;
+	static LinkedList<Point> dustQueue;
 	static int airCleanerR;
 	static int[] dx = {-1, 0, 1, 0};
 	static int[] dy = {0, -1, 0, 1};
@@ -36,14 +33,12 @@ public class Main {
 		}
 
 		for(int i = 0; i < T; i++) {
-			// 먼지가 확산되고 정화됨에따라 없어지기때문에 매 초마다 먼지리스트 구함 
-			dustList = new ArrayList<>();
+			// 먼지가 확산되고 정화됨에따라 없어지기 때문에, 매 초마다 먼지큐를 새로 만듬 
 			findDust();
 
 			spreadDust(); // 먼지 확산 
-
-			runAirCleaner(airCleanerR, 0, true); // 위쪽 공기청정기 - 반시계 방향 공기청정기 순환  
-			runAirCleaner(airCleanerR+1, 0, false); // 아래쪽 공기청정기 - 시계 방향 공기청정기 순환 
+			
+			runAirCleaner(); // 공기 청정기 작동 
 		}
 
 		int answer = 0;
@@ -59,25 +54,24 @@ public class Main {
 	}
 
 	public static void findDust() {
+		dustQueue = new LinkedList<>();
+
 		for(int i = 0; i < R; i++) {
 			for(int j = 0; j < C; j++) {
-				if(map[i][j] != -1 && map[i][j] != 0) {
-					dustList.add(new Point(i, j, map[i][j]));
-				}
+				if(map[i][j] != -1 && map[i][j] != 0) 
+					dustQueue.add(new Point(i, j, map[i][j]));
 			}
 		}
 	}
 
 	public static void spreadDust() {
-		Queue<Point> queue = new LinkedList<>();
-		for(Point p : dustList) {
-			queue.add(p);
-		}
+		while(!dustQueue.isEmpty()) {
+			int cx = dustQueue.peek().x;
+			int cy = dustQueue.peek().y;
+			int cDust = dustQueue.poll().dust; // 현재 좌표의 미세먼지 양 
 
-		while(!queue.isEmpty()) {
-			int cx = queue.peek().x;
-			int cy = queue.peek().y;
-			int cDust = queue.poll().dust; // 현재 좌표의 미세먼지 양 
+//			if(cDust < 5) // 확산될 먼지가 없다면 pass 
+//				continue;
 
 			int spreadCnt = 0; // 확산된 방향의 개수
 
@@ -89,65 +83,52 @@ public class Main {
 					continue;
 
 				spreadCnt++;
-				map[nx][ny] += cDust / 5; // 확산되는 미세먼지 양 
+				map[nx][ny] += (cDust/5); // 확산되는 미세먼지 양 
 			}
 
-			map[cx][cy] -= (cDust / 5) * spreadCnt; // 남은 미세먼지 양 
+			map[cx][cy] -= (cDust/5) * spreadCnt; // 남은 미세먼지 양 
 		}
 	}
 
-	public static void runAirCleaner(int x, int y, boolean isUp) {
-		int[] arr = {3, 0, 1, 2}; // 우상좌하 이동 
+	private static void runAirCleaner() {
+		int top = airCleanerR;
+		int down = airCleanerR + 1;
+		
+		// 순환 방향으로 값을 이동시키면 방향이 바뀌는 부분에서 복잡함 
+		// 그래서 방향으로 흘러가는 것이 아니라, 공기청정기에 먼지가 빨려 들어온다는 느낌으로 값을 당겨주면 쉽게 이동시킬 수 있음 
 
-		int cx = x; // 현재 좌표값 
-		int cy = y;
+		// 위쪽 공기청정기의 바람은 반시계방향 순환
+		for (int i = top - 1; i > 0; i--) // 아래로 당기기
+			map[i][0] = map[i-1][0];
+	
+		for (int i = 0; i < C - 1; i++) // 왼쪽으로 당기기
+			map[0][i] = map[0][i+1];
+		
+		for (int i = 0; i < top; i++) // 위로 당기기
+			map[i][C - 1] = map[i + 1][C - 1];
+		
+		for (int i = C - 1; i > 1; i--) // 오른쪽으로 당기기
+			map[top][i] = map[top][i-1];
+		// 공기청정기에서 부는 바람은 미세먼지가 없는 바람 (공기청정기 바로 옆은 0)
+		map[top][1] = 0;
 
-		int preDust = -1; // 한칸씩 먼지 이동을 위한 먼지 초기값 
-
-		// 상하좌우 방향에 따라 움직일 범위를 지정해준다. 
-		for(int i = 0; i < 4; i++) {
-			int start = 0;
-			int end = 0;
-			int dir = arr[i];
-
-			if(dir == 1 || dir == 3) { // 좌, 우 방향 - y값만 바뀜 
-				start = y;
-				end = C;
-			} else { // 상, 하 방향 - x값만 바뀜 
-				if(!isUp) { // 아래쪽 공기청정기라면 상, 하 방향을 바꾸어서 시계 방향으로 순환하게 만듬 - 우하좌상 
-					dir = (dir + 2) % 4;
-				}
-				start = x;
-				end = R;
-			}
-
-			// 먼지 이동 
-			for(int j = start; j < end; j++) {
-				int nx = cx + dx[dir];
-				int ny = cy + dy[dir];
-
-				if(nx < 0 || nx >= R || ny < 0 || ny >= C ) // 범위를 벗어나면 pass 
-					continue;
-
-				if(map[nx][ny] == -1)  // 공기청정기를 만난다면 순환 끝 
-					break;
-
-				cx = nx; // 이동할 수 있는 곳이라면 좌표값 갱신 
-				cy = ny;
-
-				if(preDust == -1) { // 시작 좌표라면 temp 값 갱신만하고 다음 좌표부터 시작  
-					preDust = map[nx][ny];
-					map[nx][ny] = 0; // 이동했으니 빈칸으로 만들어 줌 
-					continue;
-				}
-
-				// 시작 좌표가 아니라면 이전 먼지값으로 갱신해 먼지 한 칸 이동 
-				int temp = map[nx][ny];
-				map[nx][ny] = preDust;
-				preDust = temp;
-			}
-		}
+		// 아래쪽 공기청정기의 바람은 시계방향으로 순환
+		for (int i = down + 1; i < R - 1; i++) // 위로 당기기
+			map[i][0] = map[i + 1][0];
+		
+		for (int i = 0; i < C - 1; i++) // 왼쪽으로 당기기
+			map[R - 1][i] = map[R - 1][i + 1]; 
+		
+		for (int i = R - 1; i > down; i--) // 아래로 당기기
+			map[i][C - 1] = map[i - 1][C - 1];
+	
+		for (int i = C - 1; i > 1; i--) // 오른쪽으로 당기기
+			map[down][i] = map[down][i - 1];
+		
+		map[down][1] = 0; // 공기청정기에서 부는 바람은 미세먼지가 없는 바람 (공기청정기 바로 옆은 0)
 	}
+
+
 }
 
 class Point {
