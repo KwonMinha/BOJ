@@ -89,11 +89,14 @@ public class Main {
 				map[snakeDeque.peekLast().x][snakeDeque.pollLast().y] = 0;
 			}
 			if(time == X) {
-				if(C == 0) // 왼쪽 90도 방향 전환 
-					snakeDir = ++snakeDir % 4;
-				else  // 오른쪽 90도 방향 전환 
-					snakeDir = (--snakeDir == -1 ? 3 : snakeDir) % 4; // 상방향 0일 경우 --하면 음수 -> if문으로 바로 우방향 3으로 처리
-
+				if(C == 0) { // 왼쪽 90도 방향 전환 -> 상 좌 하 우 0 1 2 3 순서 
+					//snakeDir = ++snakeDir % 4;
+					snakeDir = (snakeDir+1) % 4;
+				} else { // 오른쪽 90도 방향 전환 -> 우 하 좌 상 3 2 1 0 순서 
+					//snakeDir = (--snakeDir == -1 ? 3 : snakeDir) % 4; // 상방향 0일 경우 --하면 음수 -> if문으로 바로 우방향 3으로 처리
+					snakeDir = (snakeDir+3) % 4;
+				}
+				
 				if(!direction.isEmpty()) { // 큐에 방향 변환 정보가 있다면 갱신 
 					X = direction.peek().x;
 					C = direction.poll().y;
