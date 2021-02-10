@@ -52,11 +52,12 @@ public class Main {
 				System.arraycopy(map[i], 0, copyMap[i], 0, map[i].length);
 			}
 						
-			// cctv번호와 순열로 뽑혀진 방향에 맞는 상하좌우 좌표값 설정 
+			// cctv번호와 순열로 뽑혀진 방향에 맞는 상하좌우 방향 설정 
 			for(int i = 0; i < cctvList.size(); i++) {
 				direction(cctvList.get(i), output[i]);
 			}
 			
+			// 사각 지대 구하기 
 			getBlindSpot();
 
 			return;
@@ -85,33 +86,33 @@ public class Main {
 			}
 		} else if(cctvNum == 3) {
 			if(d == 0) {
-				watch(cctv, 0);
+				watch(cctv, 0); // 상우 
 				watch(cctv, 1);
-			} else if(d == 1) {
-				watch(cctv, 1);
+			} else if(d == 1) { 
+				watch(cctv, 1); // 우하 
 				watch(cctv, 2);
-			} else if(d == 2) {
-				watch(cctv, 2);
+			} else if(d == 2) { 
+				watch(cctv, 2); // 하좌 
 				watch(cctv, 3);
-			} else if(d == 3) {
-				watch(cctv, 0);
+			} else if(d == 3) { 
+				watch(cctv, 0); // 좌상 
 				watch(cctv, 3);
 			}
 		} else if(cctvNum == 4) {
 			if(d == 0) {
-				watch(cctv, 0);
+				watch(cctv, 0); // 좌상우 
 				watch(cctv, 1);
 				watch(cctv, 3);
 			} else if(d == 1) {
-				watch(cctv, 0);
+				watch(cctv, 0); // 상우하 
 				watch(cctv, 1);
 				watch(cctv, 2);
 			} else if(d == 2) {
-				watch(cctv, 1);
+				watch(cctv, 1); // 좌하우 
 				watch(cctv, 2);
 				watch(cctv, 3);
 			} else if(d == 3) {
-				watch(cctv, 0);
+				watch(cctv, 0); // 상좌하 
 				watch(cctv, 2);
 				watch(cctv, 3);
 			}
