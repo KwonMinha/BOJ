@@ -5,11 +5,28 @@
  * https://www.acmicpc.net/problem/6549
  */
 
+import java.util.Scanner;
+
 public class Main {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		Scanner sc = new Scanner(System.in);
+		
+		while(true) {
+			int N = sc.nextInt();
+			
+			if(N == 0)
+				break;
+			
+			int[] histogram = new int[N];
+			for(int i = 0; i < N; i++) {
+				histogram[i] = sc.nextInt();
+				System.out.print(histogram[i] + " ");
+			}
+			System.out.println();
+			
+		}
+		
 	}
 
 }
