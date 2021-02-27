@@ -59,9 +59,8 @@ public class Main {
 				int nx = x + dx[j];
 				int ny = y + dy[j];
 
-				if(map[nx][ny] == 2) {
+				if(map[nx][ny] == 2) 
 					cnt++;
-				}
 			}
 
 			if(cnt >= 2) { // 외부 공기와 2변 이상 접촉한 경우 
@@ -72,7 +71,6 @@ public class Main {
 			}
 		}
 	}
-
 
 	// dfs로 외부와 접촉한 공기 2로 표시
 	static void dfs(int x, int y) {
