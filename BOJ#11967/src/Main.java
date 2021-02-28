@@ -17,6 +17,9 @@ public class Main {
 	static boolean[][] visited;
 	static boolean[][] isLight;
 	static boolean[][] isMove;
+	
+	static int cnt = 0;
+	
 
 	static int[] dx = {-1, 0, 1, 0};
 	static int[] dy = {0, 1, 0, -1};
@@ -68,6 +71,8 @@ public class Main {
 			int cx = queue.peek().x;
 			int cy = queue.poll().y;
 			
+			turnLight(cx, cy);
+			
 			for(int i = 0; i < 4; i++) {
 				int nx = cx + dx[i];
 				int ny = cy + dy[i];
@@ -79,6 +84,28 @@ public class Main {
 		}
 		
 		return false;
+	}
+	
+	public static void turnLight(int x, int y) {
+		for(int i = 0; i < switchs[x][y].size(); i++) {
+			Point p = switchs[x][y].get(i);
+			
+			if(!isLight[p.x][p.y]) { // 불이 꺼져있다면 불을 켬 
+				isLight[p.x][p.y] = true;
+				cnt++;
+			}
+			
+			// 불 켜진 방으로 이동할 수 있는지 확인 
+			for(int j = 0; j < 4; j++) {
+				int nx = x + dx[i];
+				int ny = y + dy[i];
+				
+				if(nx < 0 || ny < 0 || nx >= N || ny >= N || visited[nx][ny]) continue;
+				
+				
+			
+			}
+		}
 	}
 
 }
