@@ -6,22 +6,22 @@
  */
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
 
 public class Main {
 	static int N;
-
-	static ArrayList<Light> lightList = new ArrayList<>();
-
+	static ArrayList<Point>[][] switchs;
 	static int[][] map;
-
 	static boolean[][] visited;
+	static boolean[][] isLight;
+	static boolean[][] isMove;
 
 	static int[] dx = {-1, 0, 1, 0};
 	static int[] dy = {0, 1, 0, -1};
+	
+	
 
 
 	public static void main(String[] args) {
@@ -29,71 +29,44 @@ public class Main {
 		N = sc.nextInt();
 		int M = sc.nextInt();
 
-		map = new int[N+1][N+1];
-		map[1][1] = 1;
+		visited = new boolean[N][N];
+		isLight = new boolean[N][N];
+		isMove = new boolean[N][N];
+		
+		 switchs = new ArrayList[N][N];
+	        for (int i = 0; i < N; i++) {
+	            for (int j = 0; j < N; j++) {
+	                switchs[i][j] = new ArrayList<>();
+	            }
+	        }
 
-
+		
 		for(int i = 0; i < M; i++) {
-			int x = sc.nextInt();
-			int y = sc.nextInt();
-			int a = sc.nextInt();
-			int b = sc.nextInt();
+			int x = sc.nextInt()-1;
+			int y = sc.nextInt()-1;
+			int a = sc.nextInt()-1;
+			int b = sc.nextInt()-1;
 
-			if(x == 1 && y == 1) {
-				map[a][b] = 1;
-			} else {
-				lightList.add(new Light(x, y, a, b));
-			}
-		}
-
-		Collections.sort(lightList);
-
-//		for(int i = 0; i < lightList.size(); i++) {
-//			Light l = lightList.get(i);
-//			System.out.println(l.x + " " + l.y + " " + l.a + " " + l.b);
-//		}
-//		System.out.println();
-		
-		for(int i = 0; i < lightList.size(); i++) {
-			Light l = lightList.get(i);
-			
-			if(!bfs(l.x, l.y)) {
-				continue;
-			} else {
-				map[l.a][l.b] = 1;
-			}
+			switchs[x][y].add(new Point(a, b));
 		}
 		
-		int ans = 0;
-		for(int i = 1; i < N+1; i++) {
-			for(int j = 1; j < N+1; j++) {
-				if(map[i][j] == 1) {
-					ans++;
-				}
-				//System.out.print(map[i][j] + " ");
-			}
-			//System.out.println();
-		}
 
-		System.out.println(ans);
+		
+		
+		bfs();
 
 
 
 	}
 	
-	public static boolean bfs(int a, int b) {
+	public static boolean bfs() {
 		Queue<Point> queue = new LinkedList<>();
-		queue.add(new Point(1, 1));
-		visited = new boolean[N+1][N+1];
-		visited[1][1] = true;
+		queue.add(new Point(0, 0));
+		visited[0][0] = isLight[0][0] = true;
 		
 		while(!queue.isEmpty()) {
 			int cx = queue.peek().x;
 			int cy = queue.poll().y;
-			
-			if(cx == a && cy == b) {
-				return true;
-			}
 			
 			for(int i = 0; i < 4; i++) {
 				int nx = cx + dx[i];
@@ -101,10 +74,7 @@ public class Main {
 				
 				if(nx < 1 || ny < 1 || nx >= N+1 || ny >= N+1 || visited[nx][ny]) continue;
 				
-				if(map[nx][ny] == 1) {
-					visited[nx][ny] = true;
-					queue.add(new Point(nx, ny));
-				}
+				
 			}
 		}
 		
@@ -120,36 +90,5 @@ class Point {
 	Point(int x, int y) {
 		this.x = x;
 		this.y = y;
-	}
-}
-
-class Light implements Comparable<Light>{
-	int x;
-	int y;
-	int a;
-	int b;
-
-	Light(int x, int y, int a, int b) {
-		this.x = x;
-		this.y = y;
-		this.a = a;
-		this.b = b;
-	}
-
-	@Override
-	public int compareTo(Light o) {
-		if(x == o.x) {
-			if(y == o.y) {
-				if(a == o.a) {
-					return b - o.b;
-				} else {
-					return a - o.a;
-				}
-			} else {
-				return y - o.y;	
-			}
-		} else {
-			return x - o.x;
-		}
 	}
 }
