@@ -56,27 +56,23 @@ public class Main {
 					size[0][i] += 2;
 				}
 			}
-
-			// 나머지 애벌레 키우기 
-			for(int i = 1; i < M; i++) {
-				for(int j = 1; j < M; j++) {
-					size[i][j] = Math.max(size[i][j], size[i-1][j]);
-					size[i][j] = Math.max(size[i][j], size[i-1][j-1]);
-					size[i][j] = Math.max(size[i][j], size[i][j-1]);
-				}
-			}
 		}
 
+		// 나머지 애벌레 키우기 
+		for(int i = 1; i < M; i++) {
+			for(int j = 1; j < M; j++)
+				size[i][j] = Math.max(size[i-1][j], Math.max(size[i-1][j-1], size[i][j-1]));
+		}
+		
 		// 출력
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < M; i++) { 
 			for (int j = 0; j < M; j++) 
 				sb.append(size[i][j] + " "); 
 			sb.append("\n"); 
-		} 
+		}
 
 		System.out.println(sb.toString());
 	}
-
 
 }
