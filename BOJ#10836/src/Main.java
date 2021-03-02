@@ -5,77 +5,78 @@
  * https://www.acmicpc.net/problem/10836
  */
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.Scanner;
+import java.util.StringTokenizer;
 
 public class Main {
-	static int M, N;
-	static int[][] size, grow;
-	static int[] dx = {-1, -1, 0}; //  상, 상좌, 좌 순서 
-	static int[] dy = {0, -1, -1};
 
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in)); 
+		StringTokenizer st = new StringTokenizer(br.readLine(), " "); 
 
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		M = sc.nextInt();
-		N = sc.nextInt();
+		int M = Integer.parseInt(st.nextToken()); 
+		int N = Integer.parseInt(st.nextToken()); 
 
-		size = new int[M][M];
+		int[][] size = new int[M][M];
 
 		for(int i = 0; i < M; i++) 
 			Arrays.fill(size[i], 1);
 
-		for(int i = 0; i < N; i++) {
-			int zero = sc.nextInt();
-			int one = sc.nextInt();
-			int two = sc.nextInt();
-			
+		for(int n = 0; n < N; n++) {
+			st = new StringTokenizer(br.readLine(), " "); 
+			int zero = Integer.parseInt(st.nextToken()); 
+			int one = Integer.parseInt(st.nextToken()); 
+			int two = Integer.parseInt(st.nextToken()); 
+
 			// 제일 왼쪽 열 애벌레 키우기 
-			for(int j = M-1; j > 0; j--) { 
+			for(int i = M-1; i > 0; i--) { 
 				if(zero != 0) {
 					zero--;
 				} else if(one != 0) {
 					one--;
-					size[j][0] += 1;
+					size[i][0] += 1;
 				} else if(two != 0) {
 					two--;
-					size[j][0] += 2;
+					size[i][0] += 2;
 				}
 			}
 
 			// 제일 위쪽 행 애벌레 키우기 
-			for(int j = 0; j < M; j++) {
+			for(int i = 0; i < M; i++) {
 				if(zero != 0) {
 					zero--;
 				} else if(one != 0) {
 					one--;
-					size[0][j] += 1;
+					size[0][i] += 1;
 				} else if(two != 0) {
 					two--;
-					size[0][j] += 2;
+					size[0][i] += 2;
 				}
 			}
 
 			// 나머지 애벌레 키우기 
-			for(int j = 1; j < M; j++) {
-				for(int k = 1; k < M; k++) {
-					size[j][k] = Math.max(size[j][k], size[j-1][k]);
-					size[j][k] = Math.max(size[j][k], size[j-1][k-1]);
-					size[j][k] = Math.max(size[j][k], size[j][k-1]);
+			for(int i = 1; i < M; i++) {
+				for(int j = 1; j < M; j++) {
+					size[i][j] = Math.max(size[i][j], size[i-1][j]);
+					size[i][j] = Math.max(size[i][j], size[i-1][j-1]);
+					size[i][j] = Math.max(size[i][j], size[i][j-1]);
 				}
 			}
 		}
-		
-		print(size);
+
+		// 출력
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < M; i++) { 
+			for (int j = 0; j < M; j++) 
+				sb.append(size[i][j] + " "); 
+			sb.append("\n"); 
+		} 
+
+		System.out.println(sb.toString());
 	}
 
-	public static void print(int[][] arr) {
-		for(int i = 0; i < M; i++) {
-			for(int j = 0; j < M; j++) {
-				System.out.print(arr[i][j] + " ");
-			}
-			System.out.println();
-		}
-	}
 
 }
