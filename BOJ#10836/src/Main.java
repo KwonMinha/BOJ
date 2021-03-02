@@ -21,7 +21,6 @@ public class Main {
 		N = sc.nextInt();
 
 		size = new int[M][M];
-		grow = new int[M][M];
 
 		for(int i = 0; i < M; i++) 
 			Arrays.fill(size[i], 1);
@@ -30,46 +29,39 @@ public class Main {
 			int zero = sc.nextInt();
 			int one = sc.nextInt();
 			int two = sc.nextInt();
-
-			String num = "";
-			for(int j = 0; j < zero; j++)
-				num += 0;
-			for(int j = 0; j < one; j++)
-				num += 1;
-			for(int j = 0; j < two; j++)
-				num += 2;
-
-			int cnt = 0;
+			
+			// 제일 왼쪽 열 애벌레 키우기 
 			for(int j = M-1; j > 0; j--) { 
-				grow[j][0] = Integer.parseInt(num.charAt(cnt)+"");
-				size[j][0] += grow[j][0];
-				cnt++;
+				if(zero != 0) {
+					zero--;
+				} else if(one != 0) {
+					one--;
+					size[j][0] += 1;
+				} else if(two != 0) {
+					two--;
+					size[j][0] += 2;
+				}
 			}
 
+			// 제일 위쪽 행 애벌레 키우기 
 			for(int j = 0; j < M; j++) {
-				grow[0][j] = Integer.parseInt(num.charAt(cnt)+"");
-				size[0][j] += grow[0][j];
-				cnt++;
+				if(zero != 0) {
+					zero--;
+				} else if(one != 0) {
+					one--;
+					size[0][j] += 1;
+				} else if(two != 0) {
+					two--;
+					size[0][j] += 2;
+				}
 			}
 
+			// 나머지 애벌레 키우기 
 			for(int j = 1; j < M; j++) {
 				for(int k = 1; k < M; k++) {
-					int x = j;
-					int y = k;
-					
-					int max = 0;
-					
-					for(int l = 0; l < 3; l++) {
-						int nx = x + dx[l];
-						int ny = y + dy[l];
-						
-						if(nx < 0 || ny < 0 || nx >= M || ny >= M) continue;
-						
-						max = Math.max(max, grow[nx][ny]);
-					}
-					
-					grow[x][y] = max;
-					size[x][y] += max;
+					size[j][k] = Math.max(size[j][k], size[j-1][k]);
+					size[j][k] = Math.max(size[j][k], size[j-1][k-1]);
+					size[j][k] = Math.max(size[j][k], size[j][k-1]);
 				}
 			}
 		}
