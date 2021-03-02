@@ -26,7 +26,7 @@ public class Main {
 		for(int i = 0; i < N; i++) 
 			sb.append(arr[i] + "\n");
 		
-		System.out.println(sb.toString());
+		System.out.println(sb);
 	}
 
 }
