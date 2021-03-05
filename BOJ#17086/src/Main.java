@@ -5,7 +5,6 @@
  * https://www.acmicpc.net/problem/17086
  */
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
@@ -14,8 +13,7 @@ public class Main {
 	static int N, M;
 	static int[][] map;
 	static int[][] count;
-	static ArrayList<Point> sharkList = new ArrayList<>();
-	static int min, ans;
+	static int max;
 	
 	static int[] dx = {-1, -1, 0, 1, 1, 1, 0, -1}; 
 	static int[] dy = {0, -1, -1, -1, 0, 1, 1, 1};
@@ -28,31 +26,20 @@ public class Main {
 		
 		map = new int[N][M];
 		for(int i = 0; i < N; i++) {
-			for(int j = 0; j < M; j++) {
+			for(int j = 0; j < M; j++) 
 				map[i][j] = sc.nextInt();
-				if(map[i][j] == 1) {
-					sharkList.add(new Point(i, j));
-				}
-			}
 		}
 
 		for(int i = 0; i < N; i++) {
-			for(int j = 0; j < M; j++) {
-				min = M;
-				
-				bfs(i, j);
-				
-				for(Point p : sharkList) 
-					min = Math.min(min, count[p.x][p.y]-1);
-				
-				ans = Math.max(min, ans);
-			}
+			for(int j = 0; j < M; j++) 
+				if(map[i][j] == 0)
+					max = Math.max(max, bfs(i, j)-1);
 		}
 		
-		System.out.println(ans);
+		System.out.println(max);
 	}
 
-	public static void bfs(int x, int y) {
+	public static int bfs(int x, int y) {
 		Queue<Point> queue = new LinkedList<>();
 		queue.add(new Point(x, y));
 		count = new int[N][M];
@@ -68,10 +55,16 @@ public class Main {
 
 				if(nx < 0 || ny < 0 || nx >= N || ny >= M || count[nx][ny] != 0) continue;
 				
+				if(map[nx][ny] == 1) {
+					return count[cx][cy] + 1;
+				}
+				
 				count[nx][ny] = count[cx][cy] + 1;
 				queue.add(new Point(nx, ny));
 			}
 		}
+		
+		return 0;
 	}
 
 }
