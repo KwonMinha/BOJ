@@ -5,7 +5,6 @@
  * https://www.acmicpc.net/problem/1916
  */
 
-
 import java.util.Arrays;
 import java.util.Scanner;
 
