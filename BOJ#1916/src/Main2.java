@@ -5,11 +5,10 @@
  * https://www.acmicpc.net/problem/1916
  */
 
-
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class Main {
+public class Main2 {
 
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
@@ -40,7 +39,14 @@ public class Main {
 
 		int[] distance = new int[N+1]; // 최단 거리를 담을 배열 
 		Arrays.fill(distance, Integer.MAX_VALUE-1); // 무한대로 초기화 
+	
+		// 처음 시작을 위한 초기화 
+		for(int i = 1; i < N+1; i++) {
+			if(arr[start][i] != -1) 
+				distance[i] = arr[start][i];
+		}
 
+		check[start] = true; // 시작 정점 방문 표시 
 		distance[start] = 0;
 
 		for(int i = 0; i < N-1; i++) { // 시작점을 넣고 시작하기 때문에 N-1만큼만 반복 
