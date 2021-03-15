@@ -3,26 +3,22 @@
  * @date 2021. 3. 12.
  * 레이저 통신
  * https://www.acmicpc.net/problem/6087
+ * BLOG - https://minhamina.tistory.com/162
  */
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
-	static ArrayList<Point> laserList = new ArrayList<>();
 	static Point startPoint, endPoint;
 	static int W, H;
 	static int min = Integer.MAX_VALUE;
-
 	static char[][] map;
-	
 	static int[][] visited;
-
 	static int[] dx = {-1, 0, 1, 0};
 	static int[] dy = {0, 1, 0, -1};
 
@@ -41,13 +37,10 @@ public class Main {
 				map[i][j] = str.charAt(j);
 
 				if(map[i][j] == 'C') {
-					if(startPoint == null) {
+					if(startPoint == null)
 						startPoint = new Point(i, j, -1, 0);
-					} else {
+					else 
 						endPoint = new Point(i, j, -1, 0);
-					}
-
-					laserList.add(new Point(i, j, -1, 0));
 				}
 			}
 		}
@@ -55,17 +48,6 @@ public class Main {
 		bfs();
 
 		System.out.println(min);
-	}
-
-	public static void print() {
-		System.out.println();
-		for(int i = 0; i < H; i++) {
-			for(int j = 0; j < W; j++) {
-				System.out.print(visited[i][j] + " ");
-			}
-			System.out.println();
-		}
-		System.out.println();
 	}
 
 	public static void bfs() {
@@ -94,30 +76,21 @@ public class Main {
 				if(nx < 0 || nx >= H || ny < 0 || ny >= W || map[nx][ny] == '*')
 					continue;
 
-				int nm = cm; // 새로운 거울 개수 구하기 (꺾이면 +1)
+				int nm = cm; // 새로운 거울 개수 저장할 변수 (꺾이면 +1 됨)
 
-				if(cd != -1 || cd != nd) { // 처음 시작이 아니고, 뱡향이 다른 경우 -> 꺾임 -> 거울 설치해야 함
+				if(cd != -1 && cd != nd) { // 처음 시작이 아니고, 뱡향이 다른 경우 -> 꺾임 -> 거울 설치해야 함
 					nm += 1; // 꺽임 
-					System.out.println("방향 바뀜 nm : " + nm);
 				}
 
 				if(visited[nx][ny] == 0) { // 방문하지 않은 경우 
-					visited[nx][ny] = nm;
+					visited[nx][ny] = nm; // 구해진 거울 값으로 초기화 
 					queue.add(new Point(nx, ny, nd, nm));
-					
-					System.out.println("방문 X ");
-					print();
-				} else if(visited[nx][ny] >= nm) { 
-					// 이미 방문한 경우, 거울 개수가 더 작은 값으로 갱신 
-					visited[nx][ny] = nm; 
-					queue.add(new Point(nx, ny, nd, nm));
-					
-					System.out.println("방문 0 ");
-					print();
+				} else if(visited[nx][ny] >= nm) { // 이미 방문한 곳이지만 새롭게 구해진 거울 개수가 더 작은 경우 
+					visited[nx][ny] = nm; // 새롭게 구해진 값으로 변경 
+					queue.add(new Point(nx, ny, nd, nm)); // 다시 그 곳부터 bfs를 위해 큐에 넣어줌 
 				}
 			}
 		}
-
 	}
 
 }
@@ -125,8 +98,8 @@ public class Main {
 class Point {
 	int x;
 	int y;
-	int dir;
-	int mirror;
+	int dir; // 레이저의 현재 방향 
+	int mirror; // 현재 위치까지 설치된 거울의 개수 
 
 	Point(int x, int y, int dir, int mirror) {
 		this.x = x;
