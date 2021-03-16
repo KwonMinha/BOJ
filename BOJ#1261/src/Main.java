@@ -48,7 +48,7 @@ public class Main {
 			int cw = queue.pollFirst().wall; // 큐의 앞쪽부터 poll (앞쪽이 우선순위가 더 높은 것으로 가정) 
 
 			if(cx == M-1 && cy == N-1) {
-				min = Math.min(min, cw);
+				min = cw;
 				break;
 			}
 
@@ -66,7 +66,7 @@ public class Main {
 				} else if(map[nx][ny] == 1) { // 벽인 경우, 우선순위가 더 낮으니 큐의 뒤에 넣어줌 
 					map[nx][ny] = 0;
 					visited[nx][ny] = true;
-					queue.addLast(new Point(nx, ny, cw + 1));
+					queue.addLast(new Point(nx, ny, cw + 1)); // 벽을 부쉈으니 current wall 변수 + 1 
 				}
 			}
 		}
