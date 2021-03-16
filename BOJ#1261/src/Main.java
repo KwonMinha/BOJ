@@ -5,8 +5,8 @@
  * https://www.acmicpc.net/problem/1261
  */
 
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Scanner;
 
 public class Main {
@@ -35,51 +35,43 @@ public class Main {
 		bfs();
 
 		System.out.println(min);
-
 	}
 
 	public static void bfs() {
-		Queue<Point> queue = new LinkedList<>();
+		Deque<Point> queue = new ArrayDeque<>(); // 일반 Queue가 아니라 Deque 사용 -> 삽입시 큐의 앞 뒤로 우선순위를 부여할 것 
 		queue.add(new Point(0, 0, 0));
 		visited[0][0] = true;
 
 		while(!queue.isEmpty()) {
 			int cx = queue.peek().x;
 			int cy = queue.peek().y;
-			int cw = queue.poll().wall;
+			int cw = queue.pollFirst().wall; // 큐의 앞쪽부터 poll (앞쪽이 우선순위가 더 높은 것으로 가정) 
 
 			if(cx == M-1 && cy == N-1) {
 				min = Math.min(min, cw);
-				continue;
+				break;
 			}
 
 			for(int i = 0; i < 4; i++) {
 				int nx = cx + dx[i];
 				int ny = cy + dy[i];
 
-				if(nx < 0 || ny < 0 || nx >= M || ny >= N) 
+				if(nx < 0 || ny < 0 || nx >= M || ny >= N || visited[nx][ny]) 
 					continue;
 
-				if(!visited[nx][ny] && map[nx][ny] == 0) {
+				// 최소로 벽을 부술려면 최대한 빈 방을 위주로 가고, 그 이외에 벽을 부숴야 함 
+				if(map[nx][ny] == 0) { // 따라서 빈 방인 경우, 우선순위가 더 높으니 큐의 앞에 넣어줌 
 					visited[nx][ny] = true;
-					queue.add(new Point(nx, ny, cw));
-				} else if(!visited[nx][ny] && map[nx][ny] == 1) {
+					queue.addFirst(new Point(nx, ny, cw));
+				} else if(map[nx][ny] == 1) { // 벽인 경우, 우선순위가 더 낮으니 큐의 뒤에 넣어줌 
 					map[nx][ny] = 0;
 					visited[nx][ny] = true;
-					queue.add(new Point(nx, ny, cw + 1));
+					queue.addLast(new Point(nx, ny, cw + 1));
 				}
 			}
 		}
 	}
-
-	public static void print() {
-		for(int i = 0; i < N; i++) {
-			for(int j = 0; j < M; j++) {
-				System.out.print(map[i][j] + " ");
-			}
-			System.out.println("");
-		}
-	}
+	
 }
 
 class Point {
