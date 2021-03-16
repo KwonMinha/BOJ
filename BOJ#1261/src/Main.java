@@ -12,7 +12,7 @@ import java.util.Scanner;
 public class Main {
 	static int N, M;
 	static int[][] map;
-	static int min = Integer.MAX_VALUE;
+	static int ans;
 	static boolean[][] visited;
 	static int[] dx = {-1, 0, 1, 0};
 	static int[] dy = {0, 1, 0, -1};
@@ -34,7 +34,7 @@ public class Main {
 
 		bfs();
 
-		System.out.println(min);
+		System.out.println(ans);
 	}
 
 	public static void bfs() {
@@ -48,7 +48,7 @@ public class Main {
 			int cw = queue.pollFirst().wall; // 큐의 앞쪽부터 poll (앞쪽이 우선순위가 더 높은 것으로 가정) 
 
 			if(cx == M-1 && cy == N-1) {
-				min = cw;
+				ans = cw;
 				break;
 			}
 
