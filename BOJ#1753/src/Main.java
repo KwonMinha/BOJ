@@ -36,28 +36,7 @@ public class Main {
 
 		int[] distance = new int[V+1];
 		int INF = 10 * (V-1) + 1; // INF는 항상 (간선 가중치의 최댓값) * (정점 개수 - 1) 보다 큰 값을 사용해야 한다.
-		Arrays.fill(distance, INF);
-		distance[start] = 0;
 
-		for(int i = 0; i < V-1; i++) {
-			int min = Integer.MAX_VALUE;
-			int index = -1;
-
-			for(int j = 1; j < V+1; j++) {
-				if(!check[j] && distance[j] < min) {
-					min = distance[j];
-					index = j;
-				}
-			}
-
-			check[index] = true;
-
-			for(int j = 1; j < V+1; j++) {
-				if(!check[j] && arr[index][j] != 0 && distance[index] + arr[index][j] < distance[j]) {
-					distance[j] = distance[index] + arr[index][j];
-				}
-			}
-		}
 
 		for(int i = 1; i < V+1; i++) {
 			if(distance[i] ==  INF)
