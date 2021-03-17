@@ -10,7 +10,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
 
-public class Main {
+public class Main3 {
 	static ArrayList<Point> cowList = new ArrayList<>();
 	static int[][] cowMap;
 	static boolean[][] visited;
@@ -35,7 +35,7 @@ public class Main {
 				roads[i][j] = new ArrayList<>();
 			}
 		}
- 
+
 		for(int i = 0; i < R; i++) {
 			int r1 = sc.nextInt();
 			int c1 = sc.nextInt();
@@ -48,25 +48,22 @@ public class Main {
 
 		// 소 위치 저장 
 		cowMap = new int[N+1][N+1];
-		
+
 		for(int i = 0; i < K; i++) {
 			int x = sc.nextInt();
 			int y = sc.nextInt();
 			cowList.add(new Point(x, y));
-			cowMap[x][y] = i+1; // 소마다 1부터 번호 부여해 줌 
+			cowMap[x][y] = i+1;
 		}
 
 		int ans = 0;
 		for(int i = 0; i < cowList.size(); i++) {
 			check = new boolean[N+1][N+1];
-	
+
 			bfs(cowList.get(i).x, cowList.get(i).y);
-			
-			// 소는 1번째부터 시작하기때문에 i+1
-			// (2, 3) (3, 2) 처럼 같은 길 중복 방지를 위해서 현재 인덱스(i+1)보다 큰 인덱스의 소들만 봐야하기 때문에 +1 해서 
-			// j는 최종적으로 i+2부터 시작 
-			for(int j = i+2; j < K+1; j++) { 
-				if(!check[i+1][j]) { // false라면 i+1번째 소가 j번째 소를 만나지 못한 것 
+
+			for(int j = i+2; j < K+1; j++) {
+				if(!check[i+1][j]) {
 					ans++;
 				} 
 			}
@@ -75,7 +72,6 @@ public class Main {
 		System.out.println(ans);
 	}
 
-	// bfs를 이용해 길을 건너는 경우를 제외하고 만날 수 있는 소들을 탐색 
 	public static void bfs(int x, int y) {
 		Queue<Point> queue = new LinkedList<>();
 		queue.add(new Point(x, y));
@@ -93,11 +89,17 @@ public class Main {
 
 				if(nx <= 0 || ny <= 0 || nx > N || ny > N || visited[nx][ny]) continue; // 범위를 벗어나거나, 이미 방문한 곳이라면 pass
 
-				if(roads[cx][cy].contains(new Point(nx, ny))) continue; // 현재 위치가 길인데 새로운 위치도 길이라서 길을 건너야 한다면 pass 
-
-				if(cowMap[nx][ny] >= 1) { // 다른 소를 만난다면 
-					check[cowMap[x][y]][cowMap[nx][ny]] = true; // check 배열에 현재 (x, y)에 있는 소가 (nx, ny)에 있는 소를 만났음을 true로 체크 
+				boolean isRoad = false;
+				for(int j = 0; j < roads[cx][cy].size(); j++) { // 현재 위치가 길인데 새로운 위치도 길이라서 길을 건너야 한다면 pass 
+					if(roads[cx][cy].get(j).x == nx && roads[cx][cy].get(j).y == ny) {
+						isRoad = true;
+						break;
+					}
 				}
+				
+				if(isRoad) continue;
+				
+				if(cowMap[nx][ny] >= 1) check[cowMap[x][y]][cowMap[nx][ny]] = true;
 
 				visited[nx][ny] = true;
 				queue.add(new Point(nx, ny));
@@ -107,6 +109,7 @@ public class Main {
 
 }
 
+/*
 class Point {
 	int x;
 	int y;
@@ -115,14 +118,4 @@ class Point {
 		this.x = x;
 		this.y = y;
 	}
-
-	// 96번째 줄에서 contains 메서드로 현재 위치 (cx, cy)의 ArrayList에 이동할 위치 (nx, ny) 객체가 있는지 확인 
-	// equals()는 객체의 저장 주소를 기반으로 탐색한다.
-	// 따라서 Point 객체의 equals() 함수를 재정의하여 x,y를 기반으로 동일한 객체 여부를 체크하도록 한다. 
-	@Override
-    public boolean equals(Object obj) { 
-        Point node = (Point) obj;
-
-        return this.x == node.x && this.y == node.y;
-    }
-}
+} */
