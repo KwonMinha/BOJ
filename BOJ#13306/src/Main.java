@@ -75,9 +75,7 @@ public class Main {
 			return x;
 		}
 		
-		return find(parent[x]);
-		
-		//return p[x] == x ? x : find(p[x]);
+		return parent[x] = find(parent[x]);
 	}
 
 }
