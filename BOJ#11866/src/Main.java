@@ -36,8 +36,6 @@ public class Main {
 		}
 		
 		System.out.println(sb.substring(0, sb.length()-2) + ">".toString());
-	
-		
 	}
 
 }
