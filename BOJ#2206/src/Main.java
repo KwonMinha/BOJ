@@ -8,8 +8,6 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
@@ -35,9 +33,7 @@ public class Main {
 			String num = br.readLine();
 			for(int j = 0; j < M; j++) {
 				map[i][j] = num.charAt(j) - '0';
-				//System.out.print(map[i][j]);
 			}
-			//System.out.println();
 		}
 
 		bfs();
@@ -46,20 +42,18 @@ public class Main {
 	}
 
 	public static void bfs() {
-		Deque<Point> deque = new ArrayDeque<>();
 		Queue<Point> queue = new LinkedList<>();
-		int[][] visited = new int[N][M];
 		queue.add(new Point(0, 0, 1, 0));
-		deque.add(new Point(0, 0, 1, 0));
-		visited[0][0] = 1;
+		
+		boolean[][][] visited = new boolean[N][M][2];
+		visited[0][0][0] = true; //[x][y][0] : 벽을 부수지 않고 온 경우 / [x][y][1] : 벽을 부수고 온 경우
+		
+		while(!queue.isEmpty()) {
+			Point cur = queue.poll();
 
-		while(!deque.isEmpty()) {
-			//Point cur = queue.poll();
-			Point cur = deque.pollFirst();
-
-			if(cur.x == N-1 && cur.y == M-1) {
-				min = Math.min(min, cur.dist);
-				continue;
+			if(cur.x == N-1 && cur.y == M-1) { // 도착점 도달 
+				min = cur.dist;
+				break;
 			}
 
 			for(int i = 0; i < 4; i++) {
@@ -68,26 +62,15 @@ public class Main {
 
 				if(nx < 0 || ny < 0 || nx >= N || ny >= M) continue;
 
-				if(visited[nx][ny] == 0) { // 한번도 방문하지 않은 곳일 경우 
-					if(map[nx][ny] == 0) { // 빈칸일 경우 
+				if(map[nx][ny] == 0) { // 빈 칸인 경우 
+					if(!visited[nx][ny][cur.wall]) { // 벽을 부수고 왔든 아니든, 방문하지 않은 경우 
+						visited[nx][ny][cur.wall] = true; // 방문 표시 
 						queue.add(new Point(nx, ny, cur.dist+1, cur.wall));
-						deque.addFirst(new Point(nx, ny, cur.dist+1, cur.wall));
-					} else { // 벽일 경우 
-						if(cur.wall == 0) {
-							//queue.add(new Point(nx, ny, cur.dist+1, cur.wall+1));
-							deque.addLast(new Point(nx, ny, cur.dist+1, cur.wall+1));
-						}
 					}
-					visited[nx][ny] = cur.dist + 1;
-				} else if(visited[nx][ny] >= cur.dist + 1){ // 이미 방문한 곳이지만 더 적은 거리로 올 수 있는 경우 
-					if(map[nx][ny] == 0) { // 빈칸일 경우 
-						//queue.add(new Point(nx, ny, cur.dist+1, cur.wall));
-						deque.addFirst(new Point(nx, ny, cur.dist+1, cur.wall));
-					} else { // 벽일 경우 
-						if(cur.wall == 0) {
-							//queue.add(new Point(nx, ny, cur.dist+1, cur.wall+1));
-							deque.addLast(new Point(nx, ny, cur.dist+1, cur.wall+1));
-						}
+				} else { // 벽인 경우 
+					if(cur.wall == 0) { // 1번도 부수지 않고 온 경우만 부순다. 
+						visited[nx][ny][1] = true;
+						queue.add(new Point(nx, ny, cur.dist+1, 1));
 					}
 				}
 			}
