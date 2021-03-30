@@ -6,10 +6,10 @@
  */
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
@@ -18,13 +18,12 @@ public class Main {
 	static int N, M;
 	static int[][] map;
 	static int min = Integer.MAX_VALUE;
-	
+
 	static int[] dx = {-1, 0, 1, 0};
 	static int[] dy = {0, -1, 0, 1};
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 		StringTokenizer st = new StringTokenizer(br.readLine());
 
 		N = Integer.parseInt(st.nextToken());
@@ -40,47 +39,54 @@ public class Main {
 			}
 			//System.out.println();
 		}
-		
+
 		bfs();
-		
+
 		System.out.println(min == Integer.MAX_VALUE ? -1 : min);
 	}
-	
+
 	public static void bfs() {
+		Deque<Point> deque = new ArrayDeque<>();
 		Queue<Point> queue = new LinkedList<>();
 		int[][] visited = new int[N][M];
 		queue.add(new Point(0, 0, 1, 0));
+		deque.add(new Point(0, 0, 1, 0));
 		visited[0][0] = 1;
-		
-		while(!queue.isEmpty()) {
-			Point cur = queue.poll();
-			
+
+		while(!deque.isEmpty()) {
+			//Point cur = queue.poll();
+			Point cur = deque.pollFirst();
+
 			if(cur.x == N-1 && cur.y == M-1) {
 				min = Math.min(min, cur.dist);
 				continue;
 			}
-			
+
 			for(int i = 0; i < 4; i++) {
 				int nx = cur.x + dx[i];
 				int ny = cur.y + dy[i];
-				
+
 				if(nx < 0 || ny < 0 || nx >= N || ny >= M) continue;
-				
+
 				if(visited[nx][ny] == 0) { // 한번도 방문하지 않은 곳일 경우 
 					if(map[nx][ny] == 0) { // 빈칸일 경우 
 						queue.add(new Point(nx, ny, cur.dist+1, cur.wall));
+						deque.addFirst(new Point(nx, ny, cur.dist+1, cur.wall));
 					} else { // 벽일 경우 
 						if(cur.wall == 0) {
-							queue.add(new Point(nx, ny, cur.dist+1, cur.wall+1));
+							//queue.add(new Point(nx, ny, cur.dist+1, cur.wall+1));
+							deque.addLast(new Point(nx, ny, cur.dist+1, cur.wall+1));
 						}
 					}
 					visited[nx][ny] = cur.dist + 1;
 				} else if(visited[nx][ny] >= cur.dist + 1){ // 이미 방문한 곳이지만 더 적은 거리로 올 수 있는 경우 
 					if(map[nx][ny] == 0) { // 빈칸일 경우 
-						queue.add(new Point(nx, ny, cur.dist+1, cur.wall));
+						//queue.add(new Point(nx, ny, cur.dist+1, cur.wall));
+						deque.addFirst(new Point(nx, ny, cur.dist+1, cur.wall));
 					} else { // 벽일 경우 
 						if(cur.wall == 0) {
-							queue.add(new Point(nx, ny, cur.dist+1, cur.wall+1));
+							//queue.add(new Point(nx, ny, cur.dist+1, cur.wall+1));
+							deque.addLast(new Point(nx, ny, cur.dist+1, cur.wall+1));
 						}
 					}
 				}
@@ -95,7 +101,7 @@ class Point {
 	int y;
 	int dist;
 	int wall;
-	
+
 	Point(int x, int y, int dist, int wall) {
 		this.x = x;
 		this.y = y;
