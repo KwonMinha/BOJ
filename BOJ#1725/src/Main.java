@@ -1,6 +1,6 @@
 /**
  * @author Minha Gwon
- * @date 2021. 3. 31.
+ * @date 2021. 4. 1.
  * 히스토그램 
  * https://www.acmicpc.net/problem/1725
  */
