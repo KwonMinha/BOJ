@@ -49,8 +49,10 @@ public class Main {
 					holeY = j;
 				} else if(map[i][j] == 'B') {
 					blue = new Marble(0, 0, i, j, 0);
+					map[i][j] = '.';
 				} else if(map[i][j] == 'R') {
 					red = new Marble(i, j, 0, 0, 0);
+					map[i][j] = '.';
 				}
 			}
 		}
@@ -78,7 +80,7 @@ public class Main {
 			int curBy = marble.by;
 			int curCnt = marble.cnt;
 			
-			System.out.println("----curCnt : " + curCnt);
+			System.out.println("--------------------------------------- curCnt : " + curCnt);
 			
 			if(curBx == holeX && curBy == holeY) { // 파란 구슬이 구멍에 빠지면 실패 
 				System.out.println("* 파란 구슬 구멍에 빠짐  ");
@@ -102,57 +104,48 @@ public class Main {
 				int cbx = curBx;
 				int cby = curBy;
 				
-				while(true) { // 1칸 움직이고 끝이 아니라 빨간 구슬이 #를 만날때 까지 움직임 
+				boolean flag = true;
+				while(flag) { // 구슬이 1칸 이동하고 끝이 아니라 빨간 구슬이 #를 만날때 까지 이동 
 					int newRx = crx + dx[i];
 					int newRy = cry + dy[i];
 					int newBx = cbx + dx[i];
 					int newBy = cby + dy[i];
 					
-					// 빨간 구슬이 범위를 #을 만나면 pass 
-					if(newRx < 1 || newRy < 1 || newRx >= N || newRy >= M || map[newRx][newRy] == '#') {
-						System.out.println("* 빨간 구슬 범위 이탈 ");
-						break;
-					} 
-					
-					// 파란 구슬은 빨간 구슬과 같은 방향으로 움직임 -> #을 만나면 이전에 있던 자리로 돌려놓음 
-					if(newBx < 1 || newBy < 1 || newBx >= N || newBy >= M || map[newBx][newBy] == '#') {
+					// 파란 구슬은 빨간 구슬과 같은 방향으로 이동 -> #을 만나면 이전에 있던 자리로 돌려놓음 
+					if(map[newBx][newBy] == '#') {
 						newBx = newBx - dx[i];
 						newBy = newBy - dy[i];
 						System.out.println("* 파란 구슬 범위 이탈 원상태로 ");
 					}
 					
-					// 움직인 빨간 구슬자리에 파란 구슬이 있으면 pass 
-					if(newRx == newBx && newRy == newBy) {
-						System.out.println("* 빨간 구슬 파란 구슬 만남 ");
+					// 빨간 구슬이 #을 만나면 이동 멈춤 
+					if(map[newRx][newRy] == '#' || (newRx == newBx && newRy == newBy)) {
+						System.out.println("* 빨간 구슬 마지막 이동 위치 ");
+						newRx = newRx - dx[i];
+						newRy = newRy - dy[i];
+						//flag = false;
+						
+						System.out.println("newRx : " + newRx + ", newRy : " + newRy);
+						
+						if(visitedCnt[newRx][newRy] == 0) { // 처음 이동하는 위치의 경우 
+							System.out.println("첫 방문 ");
+							print(newRx, newRy, newBx, newBy);
+							visitedCnt[newRx][newRy] = curCnt + 1;
+							queue.add(new Marble(newRx, newRy, newBx, newBy, curCnt + 1)); 
+						} 
+//						else if(visitedCnt[newRx][newRy] > curCnt + 1) { // 이미 방문한 곳이라도 같거나 더 적은 cnt로 이동할 수 있다면 이동함
+//							System.out.println("더 적은 cnt로 방문 : " + visitedCnt[newRx][newRy] + " > " + (curCnt + 1));
+//							visitedCnt[newRx][newRy] = curCnt + 1;
+//							queue.add(new Marble(newRx, newRy, newBx, newBy, curCnt + 1)); 
+//						} 
+						
 						break;
-					}
-					
-					/*
-					// 이미 방문한 곳이라면 pass 
-					if(visited[newRx][newRy]) {
-						break;
-					}
-					
-					// 빨간 구슬이 이동할 수 있는 곳이라면
-					visited[newRx][newRy] = true;
-					queue.add(new Marble(newRx, newRy, newBx, newBy, curCnt + 1)); // 같은 방향으로 1칸이든 2칸이든 #까지 움직이는 newCnt는 curCnt+1로 동일 
-					*/		 
-		
-					if(visitedCnt[newRx][newRy] == 0) { // 처음 이동하는 위치의 경우 
-						System.out.println("첫 방문 ");
-						visitedCnt[newRx][newRy] = curCnt + 1;
-						queue.add(new Marble(newRx, newRy, newBx, newBy, curCnt + 1)); // 같은 방향으로 1칸이든 2칸이든 #까지 움직이는 newCnt는 curCnt+1로 동일 
 					} 
-//					else if(visitedCnt[newRx][newRy] > curCnt + 1) { // 이미 방문한 곳이라도 같거나 더 적은 cnt로 이동할 수 있다면 이동함
-//						System.out.println("더 적은 cnt로 방문 : " + visitedCnt[newRx][newRy] + " > " + (curCnt + 1));
-//						visitedCnt[newRx][newRy] = curCnt + 1;
-//						queue.add(new Marble(newRx, newRy, newBx, newBy, curCnt + 1)); 
-//					} 
-					
+	
 					crx = newRx;
 					cry = newRy;
 					cbx = newBx;
-					cby = newBy;
+					cby = newBy;	
 				}
 			}
 			
@@ -162,6 +155,22 @@ public class Main {
 		
 		System.out.println("true???");
 		return false;
+	}
+	
+	public static void print(int rx, int ry, int bx, int by) {
+		for(int i = 0; i < N; i++) {
+			for(int j = 0; j < M; j++) {
+				if(i == rx && j == ry) {
+					System.out.print("R");
+				} else if(i == bx && j == by) {
+					System.out.print("B");
+				} else {
+					System.out.print(map[i][j] + "");
+				}
+			}
+			System.out.println();
+		}
+		System.out.println();
 	}
 
 }
