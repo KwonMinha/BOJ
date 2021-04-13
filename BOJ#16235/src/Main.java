@@ -14,6 +14,33 @@ import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
 public class Main {
+	static class Tree implements Comparable<Tree>{
+		int x;
+		int y;
+		int age;
+
+		Tree(int x, int y, int age) {
+			this.x = x;
+			this.y = y;
+			this.age = age;
+		}
+
+		@Override
+		public int compareTo(Tree o) {
+			//		if(o.x == x) {
+			//			if(o.y == y) {
+			//				return age - o.age;
+			//			} else {
+			//				return y - o.y;
+			//			}
+			//		} else {
+			//			return x - o.x;
+			//		}
+
+			return this.age > o.age ? 1 : -1; // 나이만 오름차순 정렬하면 됨 - 첨에 위 코드와 같이 x, y, age 다 고려했다가 시간 초과 났음 
+		}
+	}
+	
 	static int N, M, K;
 	static int[][] map;
 	static int[][] amount;
@@ -121,31 +148,4 @@ public class Main {
 		}
 	}
 
-}
-
-class Tree implements Comparable<Tree>{
-	int x;
-	int y;
-	int age;
-
-	Tree(int x, int y, int age) {
-		this.x = x;
-		this.y = y;
-		this.age = age;
-	}
-
-	@Override
-	public int compareTo(Tree o) {
-		//		if(o.x == x) {
-		//			if(o.y == y) {
-		//				return age - o.age;
-		//			} else {
-		//				return y - o.y;
-		//			}
-		//		} else {
-		//			return x - o.x;
-		//		}
-
-		return this.age > o.age ? 1 : -1; // 나이만 오름차순 정렬하면 됨 - 첨에 위 코드와 같이 x, y, age 다 고려했다가 시간 초과 났음 
-	}
 }
