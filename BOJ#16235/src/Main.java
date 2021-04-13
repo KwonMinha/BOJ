@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.PriorityQueue;
+import java.util.Stack;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -17,6 +19,9 @@ public class Main {
 	static int[][] map;
 	static int[][] amount;
 	static ArrayList<Tree> treeList;
+	static Stack<Tree> stack = new Stack<>();
+	
+	static PriorityQueue<Tree> pq;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -26,7 +31,7 @@ public class Main {
 		M = Integer.parseInt(st.nextToken()); // 나무의 개수 
 		K = Integer.parseInt(st.nextToken()); // 구할 년 수 
 
-		map = new int[N][N]; // 0부터 시작 - 각 땅에 양분이 얼마남았는지를 저장 
+		map = new int[N][N]; // index 0부터 시작 - 각 땅에 양분이 얼마남았는지를 저장 
 		amount = new int[N][N]; // 추가되는 양분의 양 저장 
 
 		// 배열 초기화 
@@ -39,6 +44,8 @@ public class Main {
 		}
 
 		treeList = new ArrayList<>(); // 나무 저장 
+		
+		pq = new PriorityQueue<>();
 
 		// 나무 정보 입력 
 		for(int i = 0; i < M; i++) {
@@ -47,76 +54,44 @@ public class Main {
 			int y = Integer.parseInt(st.nextToken()) - 1;
 			int age = Integer.parseInt(st.nextToken());
 
-			treeList.add(new Tree(x, y, age, 1)); //isAlive 1 : 살아있음 / 0 : 이번 봄에 죽음 / -1 : 이전에 죽어서 이미 양분이 됨 
+			treeList.add(new Tree(x, y, age, 1)); //isAlive 1 : 살아있음 / 0 : 이번 봄에 죽음
+			pq.add(new Tree(x, y, age, 1));
 		}
+		
 
+		
 		Collections.sort(treeList);
 
-		// 트리 리스트 출력 
-//		for(int i = 0; i < M; i++) {
-//			Tree t = treeList.get(i);
-//			System.out.println(t.x + " " + t.y + " " + t.age);
-//		}
-		
 		for(int i = 0; i < K; i++) { // K년까지 사계절 반복 
-			System.out.println("현재 년도 : " + (i+1) + " / 현재 맵 ");
-			print(map);
-			
 			spring();
 			summer();
 			fall();
 			winter();
-			
-			System.out.println("size : " + treeList.size());
-			System.out.println();
 		}
 		
-		int answer = 0;
-		
-		for(int i = 0; i < treeList.size(); i++) { // K년까지 살아남은 나무 구하기 
-			if(treeList.get(i).isAlive == 1) {
-				answer++;
-			}
-		}
-
-		System.out.println(answer);
+		//System.out.println(treeList.size());
 	}
 
 	public static void spring() {
 		for(int i = 0; i < treeList.size(); i++) {
 			Tree tree = treeList.get(i);
 
-			System.out.println("봄 - 현재 나무 " + tree.x + " " + tree.y + " " + tree.age);
-			if(tree.isAlive == -1) { // 이미 죽은 나무라면 pass
-				System.out.println("봄 - 죽은 나무 pass ");
-				continue;
-			}
-
 			if(tree.age <= map[tree.x][tree.y]) { // 나이만큼 양분을 먹을 수 있다면 -> 나이 1 증가 
 				map[tree.x][tree.y] -= tree.age;
 				tree.age += 1;
-				
-				System.out.println("봄 - 양분 먹음 " + tree.x + " " + tree.y + " " + tree.age);
 			} else { // 양분 부족 -> 죽음 
-				tree.isAlive = 0;
-				System.out.println("봄 - 죽음 ");
+				stack.add(tree);
+				treeList.remove(i);
+				i--;
 			}
 		}
 	}
 	
 	public static void summer() {
-		for(int i = 0; i < treeList.size(); i++) {
-			Tree tree = treeList.get(i);
-			
-			if(tree.isAlive == 0) {
-				map[tree.x][tree.y] += tree.age / 2; // 봄에 죽은 나무 양분으로 추가 
-				tree.isAlive = -1;
-				System.out.println("여름 - 봄에 죽은 나무 양분 추가 - x : " + tree.x + ", y : " + tree.y + ", 양 : " + tree.age/2 + ", 갱신 값 : "+ map[tree.x][tree.y]);
-			}
+		while(!stack.isEmpty()) {
+			Tree tree = stack.pop();
+			map[tree.x][tree.y] += tree.age / 2;
 		}
-		
-		System.out.println("여름 끝나고 맵 ");
-		print(map);
 	}
 	
 	public static void fall() {
@@ -126,19 +101,16 @@ public class Main {
 		for(int i = 0; i < treeList.size(); i++) {
 			Tree tree = treeList.get(i);
 			
-			System.out.println("가을 - 현재 나무 " + tree.x + " " + tree.y + " " + tree.age);
-			if(tree.isAlive == 1 && tree.age % 5 == 0) { // 살아있는 나무의 나이가 5의 배수인 경우 8방향 번식 
-				System.out.println("가을 - 살아있는 나무 5배수 ");
+			if(tree.age % 5 == 0) { // 살아있는 나무의 나이가 5의 배수인 경우 8방향 번식 
 				for(int j = 0; j < 8; j++) {
 					int nx = tree.x + dx[j];
 					int ny = tree.y + dy[j];
 					
-					if(nx < 0 || ny < 0 || nx >= N || ny >= N) { // 범위를 벗어나면 pass 
-						continue;
-					}
+					if(nx < 0 || ny < 0 || nx >= N || ny >= N) continue; // 범위를 벗어나면 pass 
+				
+					treeList.add(i, new Tree(nx, ny, 1, 1));
+					i++;
 					
-					treeList.add(new Tree(nx, ny, 1, 1));
-					System.out.println("가을 - 나이 1 나무 추가");
 				}
 			}
 		}
@@ -150,19 +122,6 @@ public class Main {
 				map[i][j] += amount[i][j]; // 양분 추가 
 			}
 		}
-		
-		System.out.println("\n겨울 - 양분 추가된 맵 ");
-		print(map);
-	}
-	
-	public static void print(int[][] arr) {
-		for(int i = 0; i < N; i++) {
-			for(int j = 0; j < N; j++) {
-				System.out.print(arr[i][j] + " ");
-			}
-			System.out.println();
-		}
-		System.out.println();
 	}
 
 }
