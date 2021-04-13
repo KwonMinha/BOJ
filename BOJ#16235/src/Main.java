@@ -3,21 +3,22 @@
  * @date 2021. 4. 13.
  * 나무 제테크 
  * https://www.acmicpc.net/problem/16235
+ * 우선순위 큐로 나무 나이순 정렬 + 죽거나 살아있는 나무 ArrayList로 관리 
  */
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.PriorityQueue;
-import java.util.Stack;
 import java.util.StringTokenizer;
 
 public class Main {
 	static int N, M, K;
 	static int[][] map;
 	static int[][] amount;
-	static Stack<Tree> deadStack = new Stack<>(); // 죽은 나무 저장 
-	static Stack<Tree> aliveStack = new Stack<>(); // 살아있는 나무 저장 
+	static ArrayList<Tree> deadList = new ArrayList<>(); // 죽은 나무 저장 
+	static ArrayList<Tree> aliveList = new ArrayList<>(); // 살아있는 나무 저장 
 	static PriorityQueue<Tree> pq = new PriorityQueue<>(); // 나무 저장 
 
 	static int[] dx = {-1, -1, -1, 0, 0, 1, 1, 1};
@@ -73,29 +74,31 @@ public class Main {
 			if(tree.age <= map[tree.x][tree.y]) { // 나이만큼 양분을 먹을 수 있다면 -> 나이 1 증가 
 				map[tree.x][tree.y] -= tree.age;
 
-				if((tree.age+1) % 5 == 0) {
-					aliveStack.push(new Tree(tree.x, tree.y, tree.age + 1));
+				if((tree.age + 1) % 5 == 0) { // 나이가 5의 배수인 경우만 가을에 번식하기 위해 List에 추가 
+					aliveList.add(new Tree(tree.x, tree.y, tree.age + 1));
 				}
 
 				tempPq.add(new Tree(tree.x, tree.y, tree.age + 1));
 			} else { // 양분 부족 -> 죽음 
-				deadStack.push(tree);
+				deadList.add(new Tree(tree.x, tree.y, tree.age));
 			}
 		}
 
-		pq = new PriorityQueue<>(tempPq);
+		pq = new PriorityQueue<>(tempPq); // 살아있는 나무만 저장한 tempPq로 pq 초기화 
 	}
 
 	public static void summer() {
-		while(!deadStack.isEmpty()) {
-			Tree tree = deadStack.pop();
+		for(int i = 0; i < deadList.size(); i++) {
+			Tree tree = deadList.get(i);
 			map[tree.x][tree.y] += tree.age / 2;
 		}
+		
+		deadList.clear();
 	}
 
 	public static void fall() {	
-		while(!aliveStack.isEmpty()) {
-			Tree tree = aliveStack.pop();
+		for(int i = 0; i < aliveList.size(); i++) {
+			Tree tree = aliveList.get(i);
 
 			for(int j = 0; j < 8; j++) { // 살아있는 나무의 나이가 5의 배수인 경우 8방향 번식 
 				int nx = tree.x + dx[j];
@@ -103,9 +106,11 @@ public class Main {
 
 				if(nx < 0 || ny < 0 || nx >= N || ny >= N) continue; // 범위를 벗어나면 pass 
 
-				pq.offer(new Tree(nx, ny, 1));
+				pq.offer(new Tree(nx, ny, 1)); // 나이 1 새로운 나무 추가 
 			}
 		}
+
+		aliveList.clear();
 	}
 
 	public static void winter() {
@@ -131,14 +136,16 @@ class Tree implements Comparable<Tree>{
 
 	@Override
 	public int compareTo(Tree o) {
-		if(o.x == x) {
-			if(o.y == y) {
-				return age - o.age;
-			} else {
-				return y - o.y;
-			}
-		} else {
-			return x - o.x;
-		}
+		//		if(o.x == x) {
+		//			if(o.y == y) {
+		//				return age - o.age;
+		//			} else {
+		//				return y - o.y;
+		//			}
+		//		} else {
+		//			return x - o.x;
+		//		}
+
+		return this.age > o.age ? 1 : -1; // 나이만 오름차순 정렬하면 됨 - 첨에 위 코드와 같이 x, y, age 다 고려했다가 시간 초과 났음 
 	}
 }
