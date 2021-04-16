@@ -8,27 +8,132 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
-	static int[][] map;
-	static int N, L;
+	static Wheel[] wheelList = new Wheel[4];
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
+		StringTokenizer st;
 
-		N = Integer.parseInt(st.nextToken());
-		L = Integer.parseInt(st.nextToken());
+		for(int i = 0; i < 4; i++) {
+			int[] arr = Arrays.stream(br.readLine().split(""))
+					.mapToInt(Integer::parseInt)
+					.toArray();
 
-		int[][] map = new int[N][N];
+			wheelList[i] = new Wheel(arr);
+		}
 
-		// 초기 지도 구성 
-		for(int i = 0; i < N; i++) {
+		int K = Integer.parseInt(br.readLine());
+
+		for(int i = 0; i < K; i++) {
 			st = new StringTokenizer(br.readLine());
-			for(int j = 0; j < N; j++) {
-				map[i][j] = Integer.parseInt(st.nextToken());
+			int num = Integer.parseInt(st.nextToken()) -1;
+			int dir = Integer.parseInt(st.nextToken());
+
+			solve(num, dir);
+
+			//			System.out.println("done");
+			//			for(int k = 0; k < 4; k++) {
+			//				for(int l = 0; l < 8; l++) {
+			//					System.out.print(wheelList[i].arr[l] + " ");
+			//				}
+			//				System.out.println();
+			//			}
+			//			System.out.println();
+		}
+
+		// 점수 출력 
+		int ans = 0;
+
+		for(int i = 0; i < 4; i++) {
+			if(wheelList[i].arr[0] != 0) {
+				ans += (int) Math.pow(2, i);
+			} 
+		}
+
+		System.out.println(ans);
+	}
+
+	public static void solve(int num, int dir) {
+		int[] rotateOrder = new int[4];
+		rotateOrder[num] = dir;
+
+		int[] startWheel = wheelList[num].arr;
+		int startLeft = startWheel[6];
+		int startRight = startWheel[2];
+		int startDir = dir;
+
+		// Up
+		for(int i = num + 1; i < 4; i++) {
+			int[] nextWheel = wheelList[i].arr;
+			int nextLeft = nextWheel[6];
+			int nextRight = nextWheel[2];
+			
+			if(startRight != nextLeft) {
+				rotateOrder[i] = dir == 1 ? -1 : 1;
+				startDir = rotateOrder[i];
+				startRight = nextRight;
+			} else {
+				break;
 			}
 		}
+
+		// Down
+		startLeft = startWheel[6];
+		startRight = startWheel[2];
+		startDir = dir;
+		
+		for(int i = num - 1; i >= 0; i--) {
+			int[] nextWheel = wheelList[i].arr;
+			int nextRight = nextWheel[2];
+			int nextLeft = nextWheel[6];
+
+			if(startLeft != nextRight) {
+				rotateOrder[i] = dir == 1 ? -1 : 1;
+				startDir = rotateOrder[i];
+				startLeft = nextLeft;
+			} else {
+				break;
+			}
+		}
+
+		// rotate
+		for(int i = 0; i < 4; i++) {
+			if(rotateOrder[i] == 1)
+				rotateRight(wheelList[i]);
+			else if(rotateOrder[i] == -1)
+				rotateLeft(wheelList[i]);
+		}
+
+	}
+
+	public static void rotateRight(Wheel wheel) { // 시계 방향 회전 
+		int temp = wheel.arr[7];
+
+		for(int i = 7; i > 0; i--)
+			wheel.arr[i] = wheel.arr[i-1];
+
+		wheel.arr[0] = temp;
+	}
+
+	public static void rotateLeft(Wheel wheel) { // 반시계 방향 회전 
+		int temp = wheel.arr[0];
+
+		for(int i = 0; i < 7; i++) 
+			wheel.arr[i] = wheel.arr[i+1];
+
+		wheel.arr[7] = temp;
+	}
+}
+
+class Wheel {
+	int[] arr;
+
+	Wheel(int[] arr) {
+		this.arr = arr;
 	}
 }
