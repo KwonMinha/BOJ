@@ -36,14 +36,14 @@ public class Main {
 
 			solve(num, dir);
 
-			//			System.out.println("done");
-			//			for(int k = 0; k < 4; k++) {
-			//				for(int l = 0; l < 8; l++) {
-			//					System.out.print(wheelList[i].arr[l] + " ");
-			//				}
-			//				System.out.println();
-			//			}
-			//			System.out.println();
+			System.out.println("done");
+			for(int k = 0; k < 4; k++) {
+				for(int l = 0; l < 8; l++) {
+					System.out.print(wheelList[k].arr[l] + " ");
+				}
+				System.out.println();
+			}
+			System.out.println();
 		}
 
 		// 점수 출력 
@@ -68,41 +68,58 @@ public class Main {
 		int startDir = dir;
 
 		// Up
+		System.out.println("up");
 		for(int i = num + 1; i < 4; i++) {
+			System.out.println("i : " + i);
+		
 			int[] nextWheel = wheelList[i].arr;
 			int nextLeft = nextWheel[6];
 			int nextRight = nextWheel[2];
 			
+			System.out.println("start Left : " + startLeft + ", startRight : " + startRight + ", nextL : " + nextLeft + ", nextRi : " + nextRight);
+			
+
 			if(startRight != nextLeft) {
-				rotateOrder[i] = dir == 1 ? -1 : 1;
+				System.out.println("OK");
+				rotateOrder[i] = startDir == 1 ? -1 : 1;
 				startDir = rotateOrder[i];
 				startRight = nextRight;
 			} else {
+				System.out.println("X");
 				break;
 			}
 		}
 
 		// Down
+		System.out.println("down");
 		startLeft = startWheel[6];
 		startRight = startWheel[2];
 		startDir = dir;
-		
+
 		for(int i = num - 1; i >= 0; i--) {
+			System.out.println("i : " + i);
+			
 			int[] nextWheel = wheelList[i].arr;
 			int nextRight = nextWheel[2];
 			int nextLeft = nextWheel[6];
+			
+			System.out.println("start Left : " + startLeft + ", startRight : " + startRight + ", nextL : " + nextLeft + ", nextRi : " + nextRight);
+			
 
 			if(startLeft != nextRight) {
-				rotateOrder[i] = dir == 1 ? -1 : 1;
+				System.out.println("OK");
+				rotateOrder[i] = startDir == 1 ? -1 : 1;
 				startDir = rotateOrder[i];
 				startLeft = nextLeft;
 			} else {
+				System.out.println("X");
 				break;
 			}
 		}
 
 		// rotate
 		for(int i = 0; i < 4; i++) {
+			System.out.println("rotate : i : " + i  + ", " + rotateOrder[i]);
 			if(rotateOrder[i] == 1)
 				rotateRight(wheelList[i]);
 			else if(rotateOrder[i] == -1)
