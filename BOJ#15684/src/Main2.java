@@ -1,3 +1,11 @@
+/**
+ * @author Minha Gwon
+ * @date 2021. 4. 18.
+ * 사다리 조작 
+ * https://www.acmicpc.net/problem/15684
+ * 시간초과 
+ */
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -27,7 +35,7 @@ public class Main2 {
 		M = sc.nextInt();
 		H = sc.nextInt();
 
-		if(M == 0) {
+		if(M == 0) { // 가로선 없는 경우 
 			System.out.println("0");
 			System.exit(0);
 		}
@@ -64,6 +72,26 @@ public class Main2 {
 
 	public static void dfs(int n, int depth, int cnt) {
 		if(depth == n) {
+//			// check2 코드 
+//			ArrayList<Point>[][] copyMap = new ArrayList[H+1][N+1];
+//			for(int i = 1; i < H+1; i++) {
+//				for(int j = 1; j < N+1; j++) {
+//					copyMap[i][j] = new ArrayList<>();
+//				}
+//			}
+//
+//			for(int i = 1; i < H+1; i++) {
+//				for(int j = 1; j < N; j++) {
+//
+//					if(visited[i][j][i][j+1]) {
+//						copyMap[i][j].add(new Point(i, j, i, j+1));
+//						copyMap[i][j+1].add(new Point(i, j+1, i, j));
+//					}
+//				}
+//			}
+//
+//			check2(cnt, copyMap);
+
 			check(cnt);
 
 			return;
@@ -127,6 +155,30 @@ public class Main2 {
 				return;
 		}
 
+		System.out.println(cnt);
+		System.exit(0);
+	}
+
+	public static void check2(int cnt, ArrayList<Point>[][] copyMap) {
+		for(int i = 1; i < N+1; i++) {
+			int curX = 1;
+			int curY = i;
+
+			while(curX != H+1) { // 사다리 타기 
+				if(copyMap[curX][curY].isEmpty()) {
+					curX++;
+				} else {
+					curY = copyMap[curX][curY].get(0).y2;
+					curX++;
+				}
+			}
+
+			if(curY != i) { // 실패 - i번 세로선의 결과가 i X
+				return;
+			}
+		}
+
+		// 성공 - i번 세로선의 결과가 i번
 		System.out.println(cnt);
 		System.exit(0);
 	}
