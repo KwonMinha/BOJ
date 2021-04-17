@@ -1,7 +1,21 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Main {
+public class Main2 {
+	static class Point {
+		int x1;
+		int x2;
+		int y1;
+		int y2;
+
+		Point(int x1, int y1, int x2, int y2) {
+			this.x1 = x1;
+			this.y1 = y1;
+			this.x2 = x2;
+			this.y2 = y2;
+		}
+	}
+
 	static ArrayList<Point>[][] map;
 	static int N, M, H;
 	static boolean[][][][] visited;
@@ -18,14 +32,14 @@ public class Main {
 			System.exit(0);
 		}
 
-		visited = new boolean[H+1][N+1][H+1][N+1];
-		
 		map = new ArrayList[H+1][N+1];
 		for(int i = 1; i < H+1; i++) {
 			for(int j = 1; j < N+1; j++) {
 				map[i][j] = new ArrayList<>();
 			}
 		}
+
+		visited = new boolean[H+1][N+1][H+1][N+1];
 
 		for(int i = 0; i < M; i++) {
 			int a = sc.nextInt();
@@ -40,57 +54,26 @@ public class Main {
 			visited[a][b][a][b+1] = true;
 			visited[a][b+1][a][b] = true;
 		}
-		
-		check(0, map);
 
-		for(int i = 1; i <= 3; i++) { // 놓을 가로선 수 
+		for(int i = 1; i <= 3; i++) { 
 			dfs(i, 0, i);
 		}
 
 		System.out.println(-1);
 	}
 
-	public static void print() {
-		for(int i = 1; i < H+1; i++) {
-			for(int j = 1; j < N+1; j++) {
-				System.out.println(map[i][j].size());
-			}
-		}
-		
-		System.out.println();
-	}
-
 	public static void dfs(int n, int depth, int cnt) {
 		if(depth == n) {
-			
-			ArrayList<Point>[][] copyMap = new ArrayList[H+1][N+1];
-			for(int i = 1; i < H+1; i++) {
-				for(int j = 1; j < N+1; j++) {
-					copyMap[i][j] = new ArrayList<>();
-				}
-			}
-			
-			for(int i = 1; i < H+1; i++) {
-				for(int j = 1; j < N; j++) {
-				
-					if(visited[i][j][i][j+1]) {
-						copyMap[i][j].add(new Point(i, j, i, j+1));
-						copyMap[i][j+1].add(new Point(i, j+1, i, j));
-					}
-				}
-			}
-			
-			check(cnt, copyMap);
+			check(cnt);
 
 			return;
 		}
 
 		for(int i = 1; i < H+1; i++) {
 			for(int j = 1; j < N; j++) {
-				
 				int[][] dy = {{0, 1}, {-1, 0}, {1, 2}};
+
 				boolean flag = true;
-				
 				for(int k = 0; k < 3; k++) {
 					int ny1 = j + dy[k][0];
 					int ny2 = j + dy[k][1];
@@ -104,11 +87,11 @@ public class Main {
 				}
 
 				if(flag) {
-//					Point p1 = new Point(i, j, i, j+1);
-//					Point p2 = new Point(i, j+1, i, j);
-//
-//					map[i][j].add(p1);
-//					map[i][j+1].add(p2);
+					Point p1 = new Point(i, j, i, j+1);
+					Point p2 = new Point(i, j+1, i, j);
+
+					map[i][j].add(p1);
+					map[i][j+1].add(p2);
 
 					visited[i][j][i][j+1] = true;
 					visited[i][j+1][i][j] = true;
@@ -118,49 +101,33 @@ public class Main {
 					visited[i][j][i][j+1] = false;
 					visited[i][j+1][i][j] = false;
 
-//					map[i][j].remove(p1);
-//					map[i][j+1].remove(p2);
+					map[i][j].remove(p1);
+					map[i][j+1].remove(p2);
 				}
 			}
 		}
 	}
 
-	public static void check(int cnt, ArrayList<Point>[][] copyMap) {
-		boolean flag = true;
-
+	public static void check(int cnt) {
 		for(int i = 1; i < N+1; i++) {
 			int curX = 1;
 			int curY = i;
-			
+
 			while(curX != H+1) {
-				if(copyMap[curX][curY].isEmpty()) {
+
+				if(map[curX][curY].isEmpty()) {
 					curX++;
 				} else {
-					curY = copyMap[curX][curY].get(0).y2;
+					curY = map[curX][curY].get(0).y2;
 					curX++;
 				}
 			}
 
-			if(curY != i) {
+			if(curY != i)
 				return;
-			}
 		}
-		
-			System.out.println(cnt);
-			System.exit(0);
-	}
-}
 
-class Point {
-	int x1;
-	int x2;
-	int y1;
-	int y2;
-
-	Point(int x1, int y1, int x2, int y2) {
-		this.x1 = x1;
-		this.y1 = y1;
-		this.x2 = x2;
-		this.y2 = y2;
+		System.out.println(cnt);
+		System.exit(0);
 	}
 }
