@@ -1,6 +1,6 @@
 /**
  * @author Minha Gwon
- * @date 2021. 4. 19.
+ * @date 2021. 4. 18.
  * 드래곤 커브 
  * https://www.acmicpc.net/problem/15685
  */
@@ -11,9 +11,9 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
-public class Main {
-	static int[] dx = {1, 0, -1, 0}; // 0, 1, 2, 3 - 우, 상, 좌, 하  
-	static int[] dy = {0, -1, 0, 1};
+public class Main2 {
+	static int[] dx = {0, -1, 0, 1}; // 0, 1, 2, 3 - 상, 좌, 하, 우 -> 반시계 방향 90도 회전을 위함 
+	static int[] dy = {-1, 0, 1, 0};
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -28,7 +28,15 @@ public class Main {
 
 			int startX = Integer.parseInt(st.nextToken()); // 1. 시작점 
 			int startY = Integer.parseInt(st.nextToken());
+
 			int dir = Integer.parseInt(st.nextToken()); // 2. 시작 방향
+
+			// 상, 좌, 하, 우 반시계 방향으로 받기 위해 방향 조정 
+			if(dir == 1) dir = 0; // 상 y-- 
+			else if(dir == 2) dir = 1; // 좌 x-- 
+			else if(dir == 3) dir = 2; // 하 y++
+			else dir = 3; // 우 x++
+
 			int g = Integer.parseInt(st.nextToken()); // 3. 세대 
 
 			ArrayList<Integer> direction = new ArrayList<>(); // 각 세대에서 얻어진 선분들의 방향을 저장 
@@ -47,14 +55,24 @@ public class Main {
 
 				for(int j = size-1; j >= 0; j--) {
 					int rotateDir = (direction.get(j) + 1) % 4; // 반시계 방향으로 회전한 방향 
-					
-					int newX = endX + dx[rotateDir]; // 끝점을 기준(고정), 시작점 좌표 -> 회전 방향으로 이동 
-					int newY = endY + dy[rotateDir];
+
+					int newX = endX; // 끝점을 기준(고정), 시작점 좌표 -> 회전 방향으로 이동 
+					int newY = endY;
+
+					if(rotateDir == 0) { // 상 
+						newY -= 1;
+					} else if(rotateDir == 1) { // 좌  
+						newX -= 1;
+					} else if(rotateDir == 2) { // 하 
+						newY += 1;
+					} else { // 우 
+						newX += 1;
+					}
 
 					// 회전시키고, 끝점에 붙여 만들어진 새로운 선분 추가 
 					check[endX][endY] = true; // 기존의 끝점이 추가된 선분의 시작점이 됨 
 					check[newX][newY]= true; // 회전시켜 얻어진 새로운 x, y좌표가 추가된 선분의 끝점이 됨 
-					
+
 					// 새로 추가된 선분으로 start, end 좌표 갱신 
 					startX = endX;
 					startY = endY;
@@ -77,16 +95,28 @@ public class Main {
 				if(check[i][j]) sameCnt++;// 1. 정사각형 위쪽 선분의 왼쪽 꼭짓점 
 
 				if(check[i+1][j]) sameCnt++; // 2. 위쪽 선분의 오른쪽 꼭짓점
-			 
+
 				if(check[i][j+1]) sameCnt++; // 3. 아래쪽 선분의 왼쪽 꼭짓점
-				
+
 				if(check[i+1][j+1]) sameCnt++; // 4. 아래쪽 선분의 오른쪽 꼭짓점
-			
+
 				if(sameCnt == 4) ans++; // 네 꼭짓점이 모두 드래곤 커브의 일부인 경우 
 			}
 		}
 
 		System.out.println(ans);
+	}
+
+	public static String direct(int d) {
+		if(d == 0) { 
+			return "상";
+		} else if(d == 1) {
+			return "좌";
+		} else if(d == 2) {
+			return "하";
+		} else {
+			return "우";
+		}
 	}
 
 }
