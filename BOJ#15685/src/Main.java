@@ -43,10 +43,10 @@ public class Main {
 
 			// g세대만큼 드래곤 커브 
 			for(int i = 0; i < g; i++) {
-				int size = direction.size(); // 현재 i세대 이전의 i-1 세대에서 저장된 선분만큼 반복 
+				int size = direction.size(); // 현재 i세대 이전의 i-1 세대에서 저장된 선분 개수만큼 반복 
 
 				for(int j = size-1; j >= 0; j--) {
-					int rotateDir = (direction.get(j) + 1) % 4; // 반시계 방향으로 회전한 방향 
+					int rotateDir = (direction.get(j) + 1) % 4; // 반시계 방향으로 90도 회전한 방향 
 					
 					int newX = endX + dx[rotateDir]; // 끝점을 기준(고정), 시작점 좌표 -> 회전 방향으로 이동 
 					int newY = endY + dy[rotateDir];
