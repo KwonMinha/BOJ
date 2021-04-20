@@ -3,6 +3,7 @@
  * @date 2021. 4. 21.
  * 연구소3 
  * https://www.acmicpc.net/problem/17142
+ * 시간 초과 
  */
 
 import java.util.ArrayList;
@@ -11,20 +12,26 @@ import java.util.Queue;
 import java.util.Scanner;
 
 public class Main {
+	static class Point {
+		int x;
+		int y;
+
+		Point(int x, int y) {
+			this.x = x;
+			this.y = y;
+		}
+	}
+
 	static int N, M;
 	static int[][] map;
 	static int[][] copyMap;
 	static int[][] visited;
 	static ArrayList<Point> virusList;
-
 	static int count;
-
 	static int min = Integer.MAX_VALUE;
 
 	static int[] dx = {-1, 0, 1, 0};
 	static int[] dy = {0, 1, 0, -1};
-
-
 
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
@@ -44,7 +51,7 @@ public class Main {
 			}
 		}
 
-		if(count == 0) {
+		if(count == 0) { // 빈 칸이 없으면 퍼뜨릴 곳도 없음 
 			System.out.println(0);
 		} else {
 			dfs(0);
@@ -118,25 +125,4 @@ public class Main {
 		}
 	}
 
-	public static void print() {
-		System.out.println();
-		for(int i = 0; i < N; i++) {
-			for(int j = 0; j < N; j++) {
-				System.out.print(map[i][j] + " ");
-			}
-			System.out.println();
-		}
-		System.out.println();
-	}
-
-}
-
-class Point {
-	int x;
-	int y;
-
-	Point(int x, int y) {
-		this.x = x;
-		this.y = y;
-	}
 }
