@@ -116,7 +116,7 @@ public class Main {
 		Collections.sort(list, new Comparator<Map.Entry<Integer, Integer>>() {
 			@Override
 			public int compare(Map.Entry<Integer, Integer> o1, Map.Entry<Integer, Integer> o2) {
-				int comparision = (o1.getValue() - o2.getValue()) * 1;
+				int comparision = o1.getValue() - o2.getValue();
 				return comparision == 0 ? o1.getKey().compareTo(o2.getKey()) : comparision;
 			}
 		});
@@ -134,5 +134,5 @@ public class Main {
         System.out.println(sortedMap);
 		 */
 	}
-
+	
 }
