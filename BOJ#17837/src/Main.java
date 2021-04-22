@@ -12,7 +12,6 @@ public class Main {
 	static int N, K;
 	static int[][] map;
 	static ArrayList<Chess> chessList;
-
 	static Deque<Chess>[][] queueMap;
 
 	static int turn = 0;
@@ -22,13 +21,12 @@ public class Main {
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 		StringTokenizer st = new StringTokenizer(br.readLine());
 
 		N = Integer.parseInt(st.nextToken());
 		K = Integer.parseInt(st.nextToken());
 
-		map = new int[N][N]; // 0은 흰색, 1은 빨간색, 2는 파란색
+		map = new int[N][N]; // 체스판 정보 저장 - 0은 흰색, 1은 빨간색, 2는 파란색
 		for(int i = 0; i < N; i++) {
 			st = new StringTokenizer(br.readLine());
 			for(int j = 0; j < N; j++) {
@@ -36,96 +34,73 @@ public class Main {
 			}
 		}
 
-		queueMap = new ArrayDeque[N][N];
+		queueMap = new ArrayDeque[N][N]; // 체스판 위에 놓인 말들 저장 
 		for(int i = 0; i < N; i++) {
 			for(int j = 0; j < N; j++) {
 				queueMap[i][j] = new ArrayDeque<>();
 			}
 		}
 
-		chessList = new ArrayList<>();
+		chessList = new ArrayList<>(); // 체스 말 저장 
 		for(int i = 0; i < K; i++) {
 			st = new StringTokenizer(br.readLine());
 			int x = Integer.parseInt(st.nextToken())-1;
 			int y = Integer.parseInt(st.nextToken())-1;
 			int dir = Integer.parseInt(st.nextToken())-1;
 
-			if(dir == 1) 
+			if(dir == 1) // 간단한 방향 이동을 위해 이동 방향 조정 
 				dir = 2;
 			else if(dir == 2)
 				dir = 1;
 
-			
 			Chess chess = new Chess(i, x, y, dir);
-			chessList.add(chess);
-
+			chessList.add(chess); 
 			queueMap[x][y].add(chess);
 		}
 
 		// 게임 시작 
 		while(turn < 1000) {
 			turn++;
-			
-			System.out.println("-------- turn : " + turn);
 
-			for(int i = 0; i < chessList.size(); i++) {
+			for(int i = 0; i < chessList.size(); i++) { // 1번 말부터 K번 말까지 순서대로 이동
 				Chess curChess = chessList.get(i);
-
-				int curIdx = curChess.idx;
-				int curX = curChess.x;
-				int curY = curChess.y;
-				int curDir = curChess.dir;
 				
-				System.out.println("curIdx : " + curIdx + ", curX : " + curX + ", curY : " + curY + ", curDir : " + curDir);
+				// 방향에 맞게 이동할 새로운 위치 
+				int newX = curChess.x + dx[curChess.dir]; 
+				int newY = curChess.y + dy[curChess.dir];
 
-				int newX = curX + dx[curDir];
-				int newY = curY + dy[curDir];
-
-				System.out.println("nx : " + newX + ", ny : " + newY);
-				
-				if(newX < 0 || newY < 0 || newX >= N || newY >= N) { // 체스판을 벗어나는 경우
-					System.out.println("체스판 벗어남 - 파랑 ");
-					moveBlue(curChess);
+				if(newX < 0 || newY < 0 || newX >= N || newY >= N) { // 이동할 칸이 체스판을 벗어나는 경우
+					moveBlue(curChess); // 파란색과 같은 경우이다.
 				} else {
 					if(map[newX][newY] == 0) { // 이동하려는 칸 흰색 
-						System.out.println("이동칸 흰 색 ");
 						moveWhiteRed(curChess, newX, newY, 0);
 					} else if(map[newX][newY] == 1) { // 이동하려는 칸 빨간색 
-						System.out.println("이동칸 빨간 색 ");
 						moveWhiteRed(curChess, newX, newY, 1);
 					} else { // 이동하려는 칸 파란색 
-						System.out.println("이동칸 파랑 색 ");
 						moveBlue(curChess);
 					}
 				}
-				
-				System.out.println();
 			}
-			
-			System.out.println("--------------------------");
 		}
 
 		System.out.println(-1);
 	}
 
 	public static void moveWhiteRed(Chess chess, int nx, int ny, int color) {
-		Deque<Chess> curQueue = new ArrayDeque<>();
-		//System.out.println("chess idx : " + chess.idx + ", x : " + chess.x + ", y : " + chess.y);
-		//System.out.print("pollLast : ");
-			
+		// A번 말의 위에 다른 말이 있는 경우에는 A번 말과 위에 있는 모든 말이 이동한다.
+		Deque<Chess> curQueue = new ArrayDeque<>(); // A번 말과 위에 있는 모든 말들 Deque에 저장 
+
+		// 현재 A번 말이 나올때까지 꺼냄 
 		Chess pollChess;
 		do {
-			pollChess = queueMap[chess.x][chess.y].pollLast();
+			pollChess = queueMap[chess.x][chess.y].pollLast(); // 뒤에서 부터 빼서 
 			pollChess.x = nx;
 			pollChess.y = ny;
-			curQueue.addFirst(pollChess);
-			
-			//System.out.print("* : " + pollChess.idx + " ");
+			curQueue.addFirst(pollChess); // 
 		} while(pollChess.idx != chess.idx);
 
 		if(color == 0) { // 흰색 칸에 넣는 경우 
 			while(!curQueue.isEmpty()) {
-				System.out.println("peek first : " + curQueue.peekFirst().idx);
 				queueMap[nx][ny].addLast(curQueue.pollFirst());
 			}
 		} else { // 빨간색 칸에 넣는 경우 
@@ -134,28 +109,19 @@ public class Main {
 			}
 		}
 
-		if(queueMap[nx][ny].size() >= 4) {
-			System.out.println("4 이상 ");
+		if(queueMap[nx][ny].size() >= 4) { // 말이 4개 이상 쌓이는 순간 게임이 종료
 			System.out.println(turn);
 			System.exit(0);
 		}
-
-		System.out.println();
 	}
 
 	public static void moveBlue(Chess chess) {
-		System.out.println("before dir : " + chess.dir);
-		chess.dir = (chess.dir + 2) % 4; // 이동 방향을 반대로
-		System.out.println("after dir : " + chess.dir);
-		
+		chess.dir = (chess.dir + 2) % 4; // 이동 방향 반대로
+
 		int nx = chess.x + dx[chess.dir];
 		int ny = chess.y + dy[chess.dir];
-		
-		if(nx < 0 || ny < 0 || nx >= N || ny >= N) {
-			//System.out.println("이도저도안댐 ");
-//			System.out.println("-1");
-//			System.exit(0);
-			
+
+		if(nx < 0 || ny < 0 || nx >= N || ny >= N) { // 체스판을 벗어나는 경우에는 파란색과 같은 경우이다.
 			moveBlue(chess);
 		} else {
 			// 이동하려는 칸이 파란색인 경우에는 이동하지 않고 가만히 있는다.
