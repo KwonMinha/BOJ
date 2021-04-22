@@ -118,7 +118,7 @@ public class Main {
 			pollChess = queueMap[chess.x][chess.y].pollLast();
 			pollChess.x = nx;
 			pollChess.y = ny;
-			curQueue.add(pollChess);
+			curQueue.addFirst(pollChess);
 			
 			//System.out.print("* : " + pollChess.idx + " ");
 		} while(pollChess.idx != chess.idx);
@@ -152,15 +152,18 @@ public class Main {
 		int ny = chess.y + dy[chess.dir];
 		
 		if(nx < 0 || ny < 0 || nx >= N || ny >= N) {
-			System.out.println("-1");
-			System.exit(0);
-		}
-
-		// 이동하려는 칸이 파란색인 경우에는 이동하지 않고 가만히 있는다.
-		if(map[nx][ny] == 0) { // 이동할 칸 흰색 
-			moveWhiteRed(chess, nx, ny, 0);
-		} else if(map[nx][ny] == 1) { // 이동할 칸 빨간색 
-			moveWhiteRed(chess, nx, ny, 1);
+			//System.out.println("이도저도안댐 ");
+//			System.out.println("-1");
+//			System.exit(0);
+			
+			moveBlue(chess);
+		} else {
+			// 이동하려는 칸이 파란색인 경우에는 이동하지 않고 가만히 있는다.
+			if(map[nx][ny] == 0) { // 이동할 칸 흰색 
+				moveWhiteRed(chess, nx, ny, 0);
+			} else if(map[nx][ny] == 1) { // 이동할 칸 빨간색 
+				moveWhiteRed(chess, nx, ny, 1);
+			}
 		}
 	}
 
