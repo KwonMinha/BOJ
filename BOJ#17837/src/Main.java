@@ -96,7 +96,7 @@ public class Main {
 			pollChess = queueMap[chess.x][chess.y].pollLast(); // 뒤에서 부터 빼서 
 			pollChess.x = nx;
 			pollChess.y = ny;
-			curQueue.addFirst(pollChess); // 
+			curQueue.addFirst(pollChess); 
 		} while(pollChess.idx != chess.idx);
 
 		if(color == 0) { // 흰색 칸에 넣는 경우 
