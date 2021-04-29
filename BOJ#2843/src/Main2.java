@@ -8,10 +8,11 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
-public class Main {
+public class Main2 {
 	static int[] tree;
 	static int[] parent;
 	static boolean[] cycle;
@@ -23,31 +24,36 @@ public class Main {
 
 		int N = Integer.parseInt(br.readLine());
 
+
 		tree = new int[N+1];
 		parent = new int[N+1];
 		cycle = new boolean[N+1];
 		isRemove = new boolean[N+1];
 
 		st = new StringTokenizer(br.readLine());
+
 		for(int i = 1; i <= N; i++) {
-			tree[i] = Integer.parseInt(st.nextToken());;
+			int x = Integer.parseInt(st.nextToken());
+			tree[i] = x;
 			parent[i] = i;
 		}
 
 		int Q = Integer.parseInt(br.readLine());
-		Stack<int[]> queryStack = new Stack<>();
-		Stack<String> answerStack = new Stack<>();
-
+		Stack<String> queryStack = new Stack<>();
+		Stack<Integer> answerStack = new Stack<>();
+		
 		for(int i = 0; i < Q; i++) {
 			st = new StringTokenizer(br.readLine());
 			int type = Integer.parseInt(st.nextToken());
 			int num = Integer.parseInt(st.nextToken());
 			
+			String q = type + " " + num;
+			
 			if(type == 2) {
 				isRemove[num] = true;
 			}
 			
-			queryStack.push(new int[] {type, num});
+			queryStack.push(q);
 		}
 		
 		for(int i = 1; i <= N; i++) {
@@ -57,24 +63,27 @@ public class Main {
 		}
 
 		while(!queryStack.isEmpty()) {
-			int[] query = queryStack.pop();
+			st = new StringTokenizer(queryStack.pop());
+
+			String query = st.nextToken();
+			int x = Integer.parseInt(st.nextToken());
 			
-			if(query[0] == 1) { // 조약돌을 정점 X에 놓았을 때, 조약돌이 무한히 움직이지 않는다면 조약돌이 멈추는 정점의 번호는 몇 번인가?
-				int v = find(query[1]);
+			if(query.equals("1")) { // 조약돌을 정점 X에 놓았을 때, 조약돌이 무한히 움직이지 않는다면 조약돌이 멈추는 정점의 번호는 몇 번인가?
+				int v = find(x);
 				if(cycle[v] == true) { // 사이클인 경우 
-					answerStack.push("CIKLUS\n");
+					answerStack.push(-1);
 				} else { // 사이클이 아닌 경우 
-					answerStack.push(v + "\n");
+					answerStack.push(v);
 				}
 			} else { // 정점 X에서 나가는 간선을 지운다. (항상 나가는 간선이 있는 정점만 주어진다) = 정점 X와 정점 X에서 나가는 간선 잇는 것과 같음 
-				union(query[1], tree[query[1]]);
+				union(x, tree[x]);
 			}
 		}
 
 		StringBuilder sb = new StringBuilder();
-		
 		while(!answerStack.isEmpty()) {
-			sb.append(answerStack.pop());
+			int v = answerStack.pop();
+			sb.append(v == -1 ? "CIKLUS" : v).append("\n");
 		}
 
 		System.out.println(sb);
