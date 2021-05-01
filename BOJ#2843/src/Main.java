@@ -89,7 +89,7 @@ public class Main {
 	}
 	
 	public static void union(int a, int b) {
-		if(a == 0 || b == 0) {
+		if(a == 0 || b == 0) { // 나가는 간선이 없는 경우에는 0이 주어진다.
 			return;
 		}
 		
