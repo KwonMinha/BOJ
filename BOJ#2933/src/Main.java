@@ -41,10 +41,10 @@ public class Main {
 		for(int i = 0; i < N; i++) {
 			int h = Integer.parseInt(st.nextToken());
 
-			//System.out.println("------------- 높이 : " + h + " ------------");
+			System.out.println("------------- 높이 : " + h + " ------------");
 
 			if(i % 2 == 0) { // 짝수 번째 (왼 -> 오) / 인덱스 0부터 시작하기 때문 
-				//System.out.println("left -> right");
+				System.out.println("left -> right");
 				for(int j = 0; j < C; j++) {
 					if(map[R-h][j].equals("x")) {
 						map[R-h][j] = "."; // 미네랄 파괴 
@@ -53,7 +53,7 @@ public class Main {
 					}
 				}
 			} else { // 홀수 번째 (오 -> 왼)
-				//System.out.println("right -> left");
+				System.out.println("right -> left");
 				for(int j = C-1; j >= 0; j--) {
 					if(map[R-h][j].equals("x")) {
 						map[R-h][j] = "."; // 미네랄 파괴 
@@ -63,16 +63,19 @@ public class Main {
 				}
 			}
 
-			//print();
+			print();
 		}
 
-		//System.out.println("------------- 정답------------");
+		System.out.println("------------- 정답------------");
 		print();
 	}
 
 	// 인접한 4방향에 미네랄이 있는지 확인 - 클러스터 확인  
 	static void cluster(int x, int y) {
-		visited = new boolean[R][C];
+		// 미리 클러스터가 있는 인접한 4방향 리스트를 만들어야 함 (클러스터 바닥에 떨어뜨리는 과정에서 .이었던 칸이 x가 될 수 있기 때문 
+		ArrayList<Point> list = new ArrayList<>(); 
+
+		//visited = new boolean[R][C];
 
 		for(int i = 0; i < 4; i++) {
 			int nx = x + dx[i];
@@ -81,10 +84,28 @@ public class Main {
 			if(nx < 0 || ny < 0 || nx >= R || ny >= C || map[nx][ny].equals("."))
 				continue;
 
+			list.add(new Point(nx, ny));
+
+			/*
+			// 인접한 방향을 찾고 클러스터를 바닥으로 떨어뜨리면, 다음 인접한 방향에서 떨어뜨려진 미네랄 때문에 혼선이 옴 
 			if(!visited[nx][ny]) { // 클러스터가 있는 경우 
+				System.out.println("clust nx : " + nx + ", ny : " + ny);
+				System.out.println(map[nx][ny]);
+
 				if(!bfs(nx, ny)) { // 클러스터가 땅에 닿는지 확인 -> 클러스터가 분리되어 떠 있는 경우 
 					move(nx, ny); // 바닥으로 떨어뜨림 
 				}
+			}
+			 */
+		}
+
+		for(int i = 0; i < list.size(); i++) {
+			Point p = list.get(i);
+
+			System.out.println("\n - 인접한 nx : " + p.r + ", ny : " + p.c + "\n");
+			
+			if(!bfs(p.r, p.c)) { // 클러스터가 땅에 닿는지 확인 -> 클러스터가 분리되어 떠 있는 경우 
+				move(p.r, p.c); // 바닥으로 떨어뜨림 
 			}
 		}
 	}
@@ -107,6 +128,7 @@ public class Main {
 		Queue<Point> queue = new LinkedList<>();
 		queue.add(new Point(x, y));
 
+		visited = new boolean[R][C];
 		visited[x][y] = true;
 
 		while(!queue.isEmpty()) {
@@ -145,11 +167,11 @@ public class Main {
 			list.add(pq.poll());
 		}
 
-		//		System.out.println("\n - 떨어뜨릴 클러스터 ");
-		//		print();
+		System.out.println("\n - 떨어뜨릴 클러스터\n");
+		print();
 
 		//System.out.println(R - list.get(0).r);
-		
+
 		int max = 0;
 
 		loop:
@@ -164,7 +186,7 @@ public class Main {
 					int nx = cx + i;
 
 					//System.out.println("nx : " + nx + ", cy : " + cy);
-					
+
 					if(nx >= R || map[nx][cy].equals("x")) { // 위에서 떨어뜨릴 미네랄을 o로 바꾸지 않았다면 다른 미네랄 x와 혼동됨 
 						max = i-1;
 						break loop;
@@ -187,9 +209,19 @@ public class Main {
 	}
 
 	static void print() {
+		System.out.print("  ");
+		for(int i = 0; i < C; i++) {
+			System.out.print(i + " ");
+		}
+		System.out.println();
+
+		int c = 0;
+
 		for(int i = 0; i < R; i++) {
+			System.out.print(i + " ");
+
 			for(int j = 0; j < C; j++) {
-				System.out.print(map[i][j]);
+				System.out.print(map[i][j] + " ");
 			}
 			System.out.println();
 		}
