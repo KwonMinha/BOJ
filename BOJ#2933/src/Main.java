@@ -148,10 +148,13 @@ public class Main {
 		//		System.out.println("\n - 떨어뜨릴 클러스터 ");
 		//		print();
 
+		//System.out.println(R - list.get(0).r);
+		
 		int max = 0;
 
 		loop:
-			for(int i = 1; i < R - list.get(0).c; i++) {
+			for(int i = 1; i < R - list.get(0).r; i++) {
+				//System.out.println("i : " + i);
 				max = i;
 
 				for(int j = 0; j < list.size(); j++) {
@@ -160,7 +163,9 @@ public class Main {
 
 					int nx = cx + i;
 
-					if(map[nx][cy].equals("x")) { // 위에서 떨어뜨릴 미네랄을 o로 바꾸지 않았다면 다른 미네랄 x와 혼동됨 
+					//System.out.println("nx : " + nx + ", cy : " + cy);
+					
+					if(nx >= R || map[nx][cy].equals("x")) { // 위에서 떨어뜨릴 미네랄을 o로 바꾸지 않았다면 다른 미네랄 x와 혼동됨 
 						max = i-1;
 						break loop;
 					}
