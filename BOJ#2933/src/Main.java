@@ -41,10 +41,11 @@ public class Main {
 		for(int i = 0; i < N; i++) {
 			int h = Integer.parseInt(st.nextToken());
 
-			System.out.println("------------- 높이 : " + h + " ------------");
+			//System.out.println("------------- 높이 : " + h + " ------------");
 
 			if(i % 2 == 0) { // 짝수 번째 (왼 -> 오) / 인덱스 0부터 시작하기 때문 
-				System.out.println("left -> right");
+				//System.out.println("left -> right");
+				
 				for(int j = 0; j < C; j++) {
 					if(map[R-h][j].equals("x")) {
 						map[R-h][j] = "."; // 미네랄 파괴 
@@ -53,7 +54,8 @@ public class Main {
 					}
 				}
 			} else { // 홀수 번째 (오 -> 왼)
-				System.out.println("right -> left");
+				//System.out.println("right -> left");
+				
 				for(int j = C-1; j >= 0; j--) {
 					if(map[R-h][j].equals("x")) {
 						map[R-h][j] = "."; // 미네랄 파괴 
@@ -63,10 +65,10 @@ public class Main {
 				}
 			}
 
-			print();
+			//print();
 		}
 
-		System.out.println("------------- 정답------------");
+		//System.out.println("------------- 정답------------");
 		print();
 	}
 
@@ -102,7 +104,7 @@ public class Main {
 		for(int i = 0; i < list.size(); i++) {
 			Point p = list.get(i);
 
-			System.out.println("\n - 인접한 nx : " + p.r + ", ny : " + p.c + "\n");
+			//System.out.println("\n - 인접한 nx : " + p.r + ", ny : " + p.c + "\n");
 			
 			if(!bfs(p.r, p.c)) { // 클러스터가 땅에 닿는지 확인 -> 클러스터가 분리되어 떠 있는 경우 
 				move(p.r, p.c); // 바닥으로 떨어뜨림 
@@ -167,8 +169,8 @@ public class Main {
 			list.add(pq.poll());
 		}
 
-		System.out.println("\n - 떨어뜨릴 클러스터\n");
-		print();
+//		System.out.println("\n - 떨어뜨릴 클러스터\n");
+//		print();
 
 		//System.out.println(R - list.get(0).r);
 
@@ -209,19 +211,17 @@ public class Main {
 	}
 
 	static void print() {
-		System.out.print("  ");
-		for(int i = 0; i < C; i++) {
-			System.out.print(i + " ");
-		}
-		System.out.println();
-
-		int c = 0;
+//		System.out.print("  ");
+//		for(int i = 0; i < C; i++) {
+//			System.out.print(i + " ");
+//		}
+//		System.out.println();
 
 		for(int i = 0; i < R; i++) {
-			System.out.print(i + " ");
+			//System.out.print(i + " ");
 
 			for(int j = 0; j < C; j++) {
-				System.out.print(map[i][j] + " ");
+				System.out.print(map[i][j] + "");
 			}
 			System.out.println();
 		}
