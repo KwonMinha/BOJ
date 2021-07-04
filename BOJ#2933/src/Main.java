@@ -5,15 +5,8 @@
  * https://www.acmicpc.net/problem/2933
  */
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.PriorityQueue;
-import java.util.Queue;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Main {
 	static int[] dx = {0, -1, 0, 1};
@@ -48,11 +41,10 @@ public class Main {
 		for(int i = 0; i < N; i++) {
 			int h = Integer.parseInt(st.nextToken());
 
-			//System.out.println("-------------" + h + "------------");
+			//System.out.println("------------- 높이 : " + h + " ------------");
 
 			if(i % 2 == 0) { // 짝수 번째 (왼 -> 오) / 인덱스 0부터 시작하기 때문 
 				//System.out.println("left -> right");
-
 				for(int j = 0; j < C; j++) {
 					if(map[R-h][j].equals("x")) {
 						map[R-h][j] = "."; // 미네랄 파괴 
@@ -63,10 +55,7 @@ public class Main {
 			} else { // 홀수 번째 (오 -> 왼)
 				//System.out.println("right -> left");
 				for(int j = C-1; j >= 0; j--) {
-					//System.out.println(R-h + " " + j);
-					
 					if(map[R-h][j].equals("x")) {
-						
 						map[R-h][j] = "."; // 미네랄 파괴 
 						cluster(R-h, j);
 						break;
@@ -76,7 +65,8 @@ public class Main {
 
 			//print();
 		}
-		
+
+		//System.out.println("------------- 정답------------");
 		print();
 	}
 
@@ -98,7 +88,7 @@ public class Main {
 			}
 		}
 	}
-	
+
 	// 클러스터가 땅에 닫는지 확인 
 	static boolean bfs(int x, int y) {
 		pq = new PriorityQueue<>(new Comparator<>() { // 바닥으로 떨어뜨리는 정도를 빠르게 찾기 위해 떠있는 클러스터 우선순위 큐로 저장 
@@ -148,47 +138,47 @@ public class Main {
 
 	// 바닥으로 떨어뜨림 
 	static void move(int x, int y) {
-		int c = pq.peek().c; // 가장 첫 열의 높이가 가장 큰 미네랄이 저장되어있음 
-		int min = getCount(pq.peek().r, c); // 해당 미네랄이 얼마나 바닥으로 떨어질 수 있는지 확인 
-		
 		ArrayList<Point> list = new ArrayList<>();
-		list.add(pq.poll());
 
 		while(!pq.isEmpty()) {
-			if(c != pq.peek().c) { // 다음 열 미네랄 
-				c = pq.peek().c;
-				
-				// 각 열의 높이가 가장 큰 미네랄이 최대로 떨어질 수 있는 값 중 가장 작은 값으로 떨어뜨려야 모양 유지 가능 
-				min = Math.min(getCount(pq.peek().r, c), min);
-			} 
-
+			map[pq.peek().r][pq.peek().c] = "o"; // 다른 클러스터와 구분짓기 위함 
 			list.add(pq.poll());
 		}
-		
-		for(int i = 0; i < list.size(); i++) { // min값만큼 클러스터 떨어뜨리기 
+
+		//		System.out.println("\n - 떨어뜨릴 클러스터 ");
+		//		print();
+
+		int max = 0;
+
+		loop:
+			for(int i = 1; i < R - list.get(0).c; i++) {
+				max = i;
+
+				for(int j = 0; j < list.size(); j++) {
+					int cx = list.get(j).r;
+					int cy = list.get(j).c;
+
+					int nx = cx + i;
+
+					if(map[nx][cy].equals("x")) { // 위에서 떨어뜨릴 미네랄을 o로 바꾸지 않았다면 다른 미네랄 x와 혼동됨 
+						max = i-1;
+						break loop;
+					}
+				}
+			}
+
+		//System.out.println(" - 최대로 떨어뜨릴 수 있는 칸의 개수 : " + max + "\n");
+
+		for(int i = 0; i < list.size(); i++) { // max값만큼 클러스터 떨어뜨리기 
 			int cx = list.get(i).r;
 			int cy = list.get(i).c;
-			
-			int nx = cx + min;
-			
+
+			int nx = cx + max;
+
 			map[cx][cy] = ".";
 			map[nx][cy] = "x";
 		}
-	}
-	
-	// 각 열의 가장 밑에 있는(높이가 가장 큰) 미네랄이 최대로 몇 칸 아래로 떨어질 수 있는지 확인 
-	static int getCount(int x, int y) {
-		int max = 0;
-		
-		for(int i = x+1; i < R; i++) {
-			if(map[i][y].equals("x")) { // 바닥(=높이 R) 또는 다른 클러스터 위까지 떨어질 수 있음  
-				break;
-			}
-			
-			max++;
-		}
-		
-		return max;
+
 	}
 
 	static void print() {
