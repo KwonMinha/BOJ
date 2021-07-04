@@ -48,32 +48,36 @@ public class Main {
 		for(int i = 0; i < N; i++) {
 			int h = Integer.parseInt(st.nextToken());
 
-			System.out.println("-------------" + h + "------------");
+			//System.out.println("-------------" + h + "------------");
 
 			if(i % 2 == 0) { // 짝수 번째 (왼 -> 오) / 인덱스 0부터 시작하기 때문 
-				System.out.println("left -> right");
+				//System.out.println("left -> right");
 
 				for(int j = 0; j < C; j++) {
-					if(map[C-h][j].equals("x")) {
-						map[C-h][j] = "."; // 미네랄 파괴 
-						cluster(C-h, j); 
+					if(map[R-h][j].equals("x")) {
+						map[R-h][j] = "."; // 미네랄 파괴 
+						cluster(R-h, j); 
 						break;
 					}
 				}
 			} else { // 홀수 번째 (오 -> 왼)
-				System.out.println("right -> left");
-
+				//System.out.println("right -> left");
 				for(int j = C-1; j >= 0; j--) {
-					if(map[C-h][j].equals("x")) {
-						map[C-h][j] = "."; // 미네랄 파괴 
-						cluster(C-h, j);
+					//System.out.println(R-h + " " + j);
+					
+					if(map[R-h][j].equals("x")) {
+						
+						map[R-h][j] = "."; // 미네랄 파괴 
+						cluster(R-h, j);
 						break;
 					}
 				}
 			}
 
-			print();
+			//print();
 		}
+		
+		print();
 	}
 
 	// 인접한 4방향에 미네랄이 있는지 확인 - 클러스터 확인  
@@ -155,7 +159,7 @@ public class Main {
 				c = pq.peek().c;
 				
 				// 각 열의 높이가 가장 큰 미네랄이 최대로 떨어질 수 있는 값 중 가장 작은 값으로 떨어뜨려야 모양 유지 가능 
-				min = Math.min(getCount(pq.peek().r, c), min); 
+				min = Math.min(getCount(pq.peek().r, c), min);
 			} 
 
 			list.add(pq.poll());
@@ -176,7 +180,7 @@ public class Main {
 	static int getCount(int x, int y) {
 		int max = 0;
 		
-		for(int i = x+1; i < C; i++) {
+		for(int i = x+1; i < R; i++) {
 			if(map[i][y].equals("x")) { // 바닥(=높이 R) 또는 다른 클러스터 위까지 떨어질 수 있음  
 				break;
 			}
