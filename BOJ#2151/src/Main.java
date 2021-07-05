@@ -11,197 +11,137 @@ import java.io.*;
 public class Main {
 	static int N;
 	static char[][] map;
-	static ArrayList<Point> mirrorList;
-	static ArrayList<Point> pointList;
-	
-	static int[] arr;
-	
-	static char[][] copyMap;
-	static boolean[][] visited;
+	static boolean[][][] visit;
 
-	static int[] dx = {-1, 0, 1, 0}; // 0 1 2 3 상 우 하 좌 방향 
-	static int[] dy = {0, 1, 0, -1};
-	
+	static int[] dx = {0, 0, -1, 1}; // 0 1 2 3 - 좌 우 상 하 방향 
+	static int[] dy = {-1, 1, 0, 0};
+
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		
+
 		N = Integer.parseInt(br.readLine());
-		
 		map = new char[N][N];
-		
-		mirrorList = new ArrayList<>();
-		pointList = new ArrayList<>();
-		
+		visit = new boolean[N][N][4];
+
+		int sx = 0;
+		int sy = 0;
+
 		for(int i = 0; i < N; i++) {
 			String str = br.readLine();
-			
+
 			for(int j = 0; j < N; j++) {
 				map[i][j] = str.charAt(j);
 				
-				if(map[i][j] == '!') {
-					mirrorList.add(new Point(i, j));
-					map[i][j] = '.';
-				} else if(map[i][j] == '#') {
-					pointList.add(new Point(i, j));
+				if(map[i][j] == '#') { // 시작점 지정 
+					sx = i;
+					sy = j;
 				}
 			}
 		}
-		
-		arr = new int[mirrorList.size()];
-		for(int i = 1; i <= mirrorList.size(); i++) {
-			combination(0, mirrorList.size(), i, 0);
-		}
-		
+
+		map[sx][sy] = '.';
+		bfs(sx, sy);
 	}
-	
-	public static void combination(int index, int n, int r, int target) {
-		if(r == 0) {
-			setMirror(arr, index);
-		}else if (target == n) {
-			return;
-		} else { 
-			arr[index] = target;
-			combination(index + 1, n, r - 1, target + 1); 
-			combination(index, n, r, target + 1); 
-		} 
-	}
-	
-	public static void setMirror(int[] arr, int length) {
-		copyMap = new char[N][N];
-		
-		for(int i = 0; i < N; i++) {
-			System.arraycopy(map[i]	, 0	, copyMap[i], 0, N);
+
+	static void bfs(int sx, int sy) {
+		PriorityQueue<Point> pq = new PriorityQueue<>();
+		pq.add(new Point(sx, sy, -1, 0));
+
+		for(int i = 0; i < 4; i++) {
+			// 시작점 모든 방향으로 방문완료 처리
+			visit[sx][sy][i] = true;
 		}
-		
-		for (int i = 0; i < length; i++) {
-			int idx = arr[i];
-			int x = mirrorList.get(idx).x;
-			int y = mirrorList.get(idx).y;
-			copyMap[x][y] = '!';
-			
-			System.out.print(arr[i] + " ");
-			System.out.println("x : " + x + ", y : " + y);
-		}
-		
-		System.out.println();
-		
-		print(copyMap);
-		
-		if(bfs()) {
-			System.out.println(length);
-			System.exit(0);
-		} else {
-			System.out.println("!");
-		}
-	} 
-	
-	public static boolean bfs() {
-		Point start = pointList.get(0);
-		Queue<Point> queue = new LinkedList<>();
-		queue.add(start);
-		
-		visited = new boolean[N][N];
-		visited[start.x][start.y] = true;
-		
-		while(!queue.isEmpty()) {
-			
-			
-			int cx = queue.peek().x;
-			int cy = queue.poll().y;
-			
-			System.out.println("cx : " + cx + ", cy : " + cy);
-			
-			if(queue.peek().d != -1) {
-				
+
+		while(!pq.isEmpty()) {
+			Point point = pq.poll();
+
+			// 목적지를 만나면 값 출력 후 종료
+			if (map[point.x][point.y] == '#') {
+				System.out.println(point.cnt);
+				return;
 			}
-			
-			for(int i = 0; i < 4; i++) {
-				int nx = cx + dx[i];
-				int ny = cy + dy[i];
-				
-				System.out.println("nx : " + nx + ", ny : " + ny);
-				
-				if(!check(nx, ny)) {
-					System.out.println("범위 벗어남  ");
-					continue;
-				}
-				
-				if(copyMap[nx][ny] == '#') { // 다른 문을 만난 경우 
-					System.out.println("ok");
-					
-					return true;
-				}
-				
-				if(copyMap[nx][ny] == '!') { // 45도 기울어진 거울을 만난 경우 
-					 // 0 1 2 3 상 우 하 좌 방향 
-					int newDir;
-					
-					System.out.println("거울 ");
-					
-					if(i == 0) { // 상 -> 우로 꺾임 1
-						newDir = 1;
-					} else if(i == 1) { // 우 -> 아래로 꺾임 2
-						newDir = 2;
-					} else if(i == 2) { // 하 -> 좌로 꺾임 3
-						newDir = 3;
-					} else { // 좌 ->  위로 꺾임 0
-						newDir = 0;
+
+			// 시작점인 경우 -> 갈 수 있는 방향 찾기 
+			if(point.dir == -1) {
+				for (int i = 0; i < 4; i++) {
+					int nx = point.x + dx[i];
+					int ny = point.y + dy[i];
+
+					if(!check(nx, ny)) continue;
+
+					if(map[nx][ny] != '*') {
+						pq.offer(new Point(nx, ny, i, point.cnt));
+						visit[nx][ny][i] = true;
 					}
-					
-					nx = nx + dx[newDir];
-					ny = ny + dy[newDir];
-					
-					if(check(nx, ny)) {
-						queue.add(new Point(nx, ny));
+				}
+			} else { // 시작점이 아닌 경우
+				if (map[point.x][point.y] == '!') { // 거울인 경우 -> 1. 거울을 세우고 진행 
+					// 0 1 2 3 - 좌 우 상 하 방향 
+					if (point.dir == 0 || point.dir == 1) { // 좌우로 움직이는 중이라면 
+						for (int i = 2; i < 4; i++) { // 위 아래로 반사 
+							int nx = point.x + dx[i];
+							int ny = point.y + dy[i];
+
+							if (!check(nx, ny)) continue;
+
+							if (map[nx][ny] != '*' && !visit[nx][ny][i]) {
+								pq.offer(new Point(nx, ny, i, point.cnt + 1));
+								visit[nx][ny][i] = true;
+							}
+						}
 					}
-					
-					visited[nx][ny] = true;
-				} else { // 그냥 빈칸일 경우 
-					System.out.println("빈칸 ");
-					queue.add(new Point(nx, ny, i));
-					visited[nx][ny] = true;
+
+					if (point.dir == 2 || point.dir == 3) { // 위 아래로 움직이는 중이라면 
+						for (int i = 0; i < 2; i++) { // 좌 우로 반사 
+							int nx = point.x + dx[i];
+							int ny = point.y + dy[i];
+
+							if (!check(nx, ny)) continue;
+
+							if (map[nx][ny] != '*' && !visit[nx][ny][i]) {
+								pq.offer(new Point(nx, ny, i, point.cnt + 1));
+								visit[nx][ny][i] = true;
+							}
+						}
+					}			
+				}
+
+				// 2. 거울을 세우지 않고 진행 
+				int nx = point.x + dx[point.dir];
+				int ny = point.y + dy[point.dir];
+
+				if (!check(nx, ny)) continue;
+
+				if (map[nx][ny] != '*' && !visit[nx][ny][point.dir]) {
+					pq.offer(new Point(nx, ny, point.dir, point.cnt));
+					visit[nx][ny][point.dir] = true;
 				}
 			}
 		}
-		
-		System.out.println("no");
-		return false;
 	}
-	
-	public static boolean check(int x, int y) {
-		if(x < 0 || y < 0 || x >= N || y >= N || visited[x][y] || copyMap[x][y] == '*') {
-			return false;
-		} else {
-			return true;	
-		}
-	}
-	
-	public static void print(char[][] arr) {
-		System.out.println();
-		
-		for(int i = 0; i < N; i++) {
-			for(int j = 0; j < N; j++) {
-				System.out.print(arr[i][j]);
-			}
-			System.out.println();
-		}
+
+	// Point 좌표값 검사  
+	static boolean check(int x, int y) {
+		return x >= 0 && y >= 0 && x < N && y < N;
 	}
 
 }
 
-class Point {
+class Point implements Comparable<Point>{
 	int x;
 	int y;
-	int d = -1;
-	
-	Point(int x, int y) {
+	int dir;
+	int cnt; // 거울 설치 횟수 저장 
+
+	Point (int x, int y, int dir, int cnt) {
 		this.x = x;
 		this.y = y;
+		this.dir = dir;
+		this.cnt = cnt;
 	}
-	
-	Point(int x, int y, int d) {
-		this.x = x;
-		this.y = y;
-		this.d = d;
+
+	@Override
+	public int compareTo(Point o) {
+		return this.cnt - o.cnt; // cnt기준 오름차순 정렬 
 	}
 }
