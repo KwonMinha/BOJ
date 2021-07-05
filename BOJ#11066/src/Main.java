@@ -14,6 +14,20 @@ public class Main {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
 		
+		int T = Integer.parseInt(br.readLine());
+		
+		for(int t = 0; t < T; t++) {
+			int K = Integer.parseInt(br.readLine());
+			
+			int[] arr = new int[K];
+			
+			for(int k = 0; k < K; k++) {
+				StringTokenizer st = new StringTokenizer(br.readLine());
+				arr[k] = Integer.parseInt(st.nextToken());
+			}
+			
+		}
+		
 
 	}
 
