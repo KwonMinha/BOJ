@@ -18,13 +18,18 @@ public class Main {
 		int B = sc.nextInt();
 		int C = sc.nextInt();
 		
-		Queue<Node> queue = new LinkedList<>();
-		boolean[][][] visited = new boolean[2000][2000][2000];
-		
-		queue.add(new Node(A, B, C));
-		visited[A][B][C] = true;
-		
 		boolean flag = false;
+		
+		if((A+B+C) % 3 != 0) {
+			System.out.println(0);
+			return;
+		}
+		
+		Queue<Node> queue = new LinkedList<>();
+		boolean[][] visited = new boolean[1501][1501];
+
+		queue.add(new Node(A, B, C));
+		visited[A][B] = true;
 		
 		while(!queue.isEmpty()) {
 			int a = queue.peek().a;
@@ -35,50 +40,54 @@ public class Main {
 				flag = true;
 				break;
 			}
-				
-			int X, Y = 0;
 			
-			for(int i = 0; i < 3; i++) {
-				if(i == 0) {
-					X = a;
-					Y = b;
-				} else if(i == 1) {
-					X = a;
-					Y = c;
+			if(a != b) {
+				if(a < b) {
+					b = b - a;
+					a = a + a;
 				} else {
-					X = b;
-					Y = c;
+					a = a - b;
+					b = b + b;
 				}
 				
-				if(X == Y) {
-					continue;
-				} 
-				
-				if(X < Y) {
-					Y = Y - X;
-					X = X + X;
-				} else {
-					X = X - Y;
-					Y = Y + Y;
+				if(!visited[a][b]) {
+					visited[a][b] = true;
+					queue.add(new Node(a, b, c));
 				}
-				
-				if(i == 0) {
-					if(!visited[X][Y][c]) {
-						visited[X][Y][c] = true;
-						queue.add(new Node(X, Y, c));
-					}
-				} else if(i == 1) {
-					if(!visited[X][b][Y]) {
-						visited[X][b][Y] = true;
-						queue.add(new Node(X, b, Y));
-					}
-				} else {
-					if(!visited[a][X][Y]) {
-						visited[a][X][Y] = true;
-						queue.add(new Node(a, X, Y));
-					}
-				}	
 			}
+			
+			if(a != c) {
+				if(a < c) {
+					c = c - a;
+					a = a + a;
+				} else {
+					a = a - c;
+					c = c + c;
+				}
+				
+				if(!visited[a][c]) {
+					visited[a][c] = true;
+					queue.add(new Node(a, b, c));
+				}
+			}
+			
+			/*
+			// a-c or b-c 둘 중 하나는 없어도 됨 -> ab, ac, bc 총 3번의 경우의 수가 아니더라도 2개로도 충분히 답 나옴 -> X, Y 더하고 빼봤자 총 합은 늘 같으니까 
+			if(b != c) {
+				if(b < c) {
+					c = c - b;
+					b = b + b;
+				} else {
+					b = b - c;
+					c = c + c;
+				}
+				
+				if(!visited[b][c]) {
+					visited[b][c] = true;
+					queue.add(new Node(a, b, c));
+				}
+			}
+			*/
 		}
 		
 		System.out.println(flag ? 1 : 0);
