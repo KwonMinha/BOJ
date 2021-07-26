@@ -24,6 +24,7 @@ public class Main {
 		parent = new int[N];
 		starList = new ArrayList<>();
 
+		// 각 별 좌표 저장 
 		for(int i = 0; i < N; i++) {
 			double x = sc.nextDouble();
 			double y = sc.nextDouble();
@@ -31,10 +32,12 @@ public class Main {
 			star[i] = new Node(x, y, 0);
 		}
 		
+		// Union-Find를 위한 parent 배열 초기화 - 초기에 각 별의 부모는 자기 자신 
 		for(int i = 0; i < N; i++) {
 			parent[i] = i;
 		}
 
+		// 각 별간의 가중치를 구해 간선 잇기 
 		for(int i = 0; i < N-1; i++) {
 			Node n1 = star[i];
 
@@ -46,13 +49,16 @@ public class Main {
 			}
 		}
 		
+		// 최소 비용 오름차순 정렬 
 		Collections.sort(starList);
 		
+		// Union-Find를 이용해 Kruskal 탐색 
 		for(int i = 0; i < starList.size(); i++) {
 			Node node = starList.get(i);
 			
 			int start = (int) node.x;
 			int end = (int) node.y;
+			
 			
 			if(find(start) != find(end)) {
 				union(start, end);
