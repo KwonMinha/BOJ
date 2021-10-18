@@ -1,7 +1,7 @@
 /**
  * @author Minha Gwon
  * @date 2021. 9. 17.
- * 근손
+ * 근손실 
  * https://www.acmicpc.net/problem/18429
  */
 
