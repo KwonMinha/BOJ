@@ -84,6 +84,7 @@ public class Main2 {
 
 		//parent[a] = find(parent[a]);
 		//return parent[a]
+		
 		return parent[a] = find(parent[a]);
 	}
 

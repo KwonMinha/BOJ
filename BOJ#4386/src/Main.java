@@ -106,7 +106,7 @@ class Node implements Comparable<Node> {
 
 	@Override
 	public int compareTo(Node o) {
-		return o.w > this.w ? -1 : 1;
+		return o.w >= this.w ? -1 : 1;
 	}
 
 }
