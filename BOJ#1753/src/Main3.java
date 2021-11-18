@@ -4,7 +4,7 @@
  * 최단경로 
  * https://www.acmicpc.net/problem/1753
  * 인접 리스트 사용 & 우선순위 큐를 사용하지 않고 다익스트라 알고리즘 구현
- * Scanner 쓰면 시간 초과남 (역시 우선순위 큐보다는 느려서 그런가...?)
+ * Scanner 쓰면 시간 초과
  */
 
 import java.io.BufferedReader;
@@ -16,6 +16,16 @@ import java.util.StringTokenizer;
 
 public class Main3 {
 
+	static class Edge {
+		int v;
+		int weight;
+
+		public Edge(int v, int weight) {
+			this.v = v;
+			this.weight = weight;
+		}
+	}
+
 	public static void main(String[] args) throws IOException {    
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
@@ -24,7 +34,7 @@ public class Main3 {
 		int start = Integer.parseInt(br.readLine()); 
 
 		// 인접 리스트 구현 
-		ArrayList<Element>[] adjList = new ArrayList[V+1];
+		ArrayList<Edge>[] adjList = new ArrayList[V+1];
 		for(int i = 1; i < V+1; i++) {
 			adjList[i] = new ArrayList<>();
 		}
@@ -35,7 +45,7 @@ public class Main3 {
 			int v = Integer.parseInt(st.nextToken());   
 			int w = Integer.parseInt(st.nextToken());
 
-			adjList[u].add(new Element(v, w));
+			adjList[u].add(new Edge(v, w));
 		}
 
 		boolean[] check = new boolean[V+1];
@@ -58,9 +68,9 @@ public class Main3 {
 
 			check[current] = true;
 
-			for(Element next : adjList[current]) {
-				if(!check[next.index] && distance[current] + next.distance < distance[next.index]) {
-					distance[next.index] = distance[current] + next.distance;
+			for(Edge next : adjList[current]) {
+				if(!check[next.v] && distance[current] + next.weight < distance[next.v]) {
+					distance[next.v] = distance[current] + next.weight;
 				}
 			}
 		}
@@ -74,21 +84,3 @@ public class Main3 {
 	}
 
 }
-
-/*
-class Element implements Comparable<Element> {
-	int index;
-	int distance;
-
-	Element(int index, int distance) {
-		this.index = index;
-		this.distance = distance;
-	}
-
-	@Override
-	public int compareTo(Element o) {
-		return this.distance <= o.distance ? -1 : 1;
-		//return Integer.compare(this.distance, o.distance);
-	}
-}
- */
